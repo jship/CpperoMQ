@@ -68,7 +68,7 @@ inline
 auto SubscribingSocket<S>::subscribe(const char* buffer) -> void
 {
     CPPEROMQ_ASSERT(buffer != nullptr);
-    setSocketOption(ZMQ_SUBSCRIBE, buffer, std::strlen(buffer));
+    subscribe(std::strlen(buffer), buffer);
 }
 
 template <typename S>
@@ -84,7 +84,7 @@ inline
 auto SubscribingSocket<S>::unsubscribe(const char* buffer) -> void
 {
     CPPEROMQ_ASSERT(buffer != nullptr);
-    setSocketOption(ZMQ_UNSUBSCRIBE, buffer, std::strlen(buffer));
+    unsubscribe(std::strlen(buffer), buffer);
 }
 
 template <typename S>
