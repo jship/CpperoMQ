@@ -44,6 +44,7 @@
 #include <CpperoMQ/Version.hpp>
 #include <CpperoMQ/Mixins/IdentifyingSocket.hpp>
 #include <CpperoMQ/Mixins/ReceivingSocket.hpp>
+#include <CpperoMQ/Mixins/RoutingSocket.hpp>
 #include <CpperoMQ/Mixins/SendingSocket.hpp>
 #include <CpperoMQ/Mixins/SocketTypeWrapper.hpp>
 #include <CpperoMQ/Mixins/SubscribingSocket.hpp>
