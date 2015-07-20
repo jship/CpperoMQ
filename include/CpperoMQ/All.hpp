@@ -45,6 +45,7 @@
 #include <CpperoMQ/Mixins/ConflatingSocket.hpp>
 #include <CpperoMQ/Mixins/IdentifyingSocket.hpp>
 #include <CpperoMQ/Mixins/ReceivingSocket.hpp>
+#include <CpperoMQ/Mixins/RequestingSocket.hpp>
 #include <CpperoMQ/Mixins/RoutingSocket.hpp>
 #include <CpperoMQ/Mixins/SendingSocket.hpp>
 #include <CpperoMQ/Mixins/SocketTypeWrapper.hpp>
