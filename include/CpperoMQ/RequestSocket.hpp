@@ -23,6 +23,7 @@
 #pragma once
 
 #include <CpperoMQ/Socket.hpp>
+#include <CpperoMQ/Mixins/IdentifyingSocket.hpp>
 #include <CpperoMQ/Mixins/ReceivingSocket.hpp>
 #include <CpperoMQ/Mixins/SendingSocket.hpp>
 #include <CpperoMQ/Mixins/SocketTypeWrapper.hpp>
@@ -31,8 +32,9 @@ namespace CpperoMQ
 {
 
 typedef Mixins::SocketTypeWrapper<ZMQ_REQ,
-            Mixins::ReceivingSocket<
-                Mixins::SendingSocket<
-                    Socket > > > RequestSocket;
+            Mixins::IdentifyingSocket<
+                Mixins::ReceivingSocket<
+                    Mixins::SendingSocket<
+                        Socket > > > > RequestSocket;
 
 }
