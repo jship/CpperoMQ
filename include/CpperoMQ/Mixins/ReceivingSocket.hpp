@@ -41,14 +41,25 @@ public:
     ReceivingSocket& operator=(ReceivingSocket&& other);
 
     template <typename... ReceivableTypes>
-    bool receive(Receivable& receivable, ReceivableTypes&... receivables);
+    auto receive( Receivable& receivable
+                , ReceivableTypes&... receivables ) -> bool;
+
+    auto getMaxInboundMessageSize() const -> int;
+    auto getReceiveBufferSize() const     -> int;
+    auto getReceiveHighWaterMark() const  -> int;
+    auto getReceiveTimeout() const        -> int;
+
+    auto setMaxInboundMessageSize(const int size) -> void;
+    auto setReceiveBufferSize(const int size)     -> void;
+    auto setReceiveHighWaterMark(const int hwm)   -> void;
+    auto setReceiveTimeout(const int size)        -> void;
 
 protected:
     ReceivingSocket(void* context, int type);
 
 private:
     // Terminating function for variadic member template.
-    bool receive() { return true; }
+    auto receive() -> bool { return true; }
 };
 
 template <typename S>
@@ -69,7 +80,8 @@ ReceivingSocket<S>& ReceivingSocket<S>::operator=(ReceivingSocket<S>&& other)
 template <typename S>
 template <typename... ReceivableTypes>
 inline
-bool ReceivingSocket<S>::receive(Receivable& receivable, ReceivableTypes&... receivables)
+auto ReceivingSocket<S>::receive( Receivable& receivable
+                                , ReceivableTypes&... receivables ) -> bool
 {
     bool moreToReceive = false;
     if (!receivable.receive(*this, moreToReceive))
@@ -90,6 +102,62 @@ bool ReceivingSocket<S>::receive(Receivable& receivable, ReceivableTypes&... rec
     }
 
     return (receive(receivables...));
+}
+
+template <typename S>
+inline
+auto ReceivingSocket<S>::getMaxInboundMessageSize() const -> int
+{
+    return (getSocketOption<int>(ZMQ_MAXMSGSIZE));
+}
+
+template <typename S>
+inline
+auto ReceivingSocket<S>::getReceiveBufferSize() const -> int
+{
+    return (getSocketOption<int>(ZMQ_RCVBUF));
+}
+
+template <typename S>
+inline
+auto ReceivingSocket<S>::getReceiveHighWaterMark() const -> int
+{
+    return (getSocketOption<int>(ZMQ_RCVHWM));
+}
+
+template <typename S>
+inline
+auto ReceivingSocket<S>::getReceiveTimeout() const -> int
+{
+    return (getSocketOption<int>(ZMQ_RCVTIMEO));
+}
+
+template <typename S>
+inline
+auto ReceivingSocket<S>::setMaxInboundMessageSize(const int size) -> void
+{
+    setSocketOption(ZMQ_MAXMSGSIZE, size);
+}
+
+template <typename S>
+inline
+auto ReceivingSocket<S>::setReceiveBufferSize(const int size) -> void
+{
+    setSocketOption(ZMQ_RCVBUF, size);
+}
+
+template <typename S>
+inline
+auto ReceivingSocket<S>::setReceiveHighWaterMark(const int hwm) -> void
+{
+    setSocketOption(ZMQ_RCVHWM, hwm);
+}
+
+template <typename S>
+inline
+auto ReceivingSocket<S>::setReceiveTimeout(const int size) -> void
+{
+    setSocketOption(ZMQ_RCVTIMEO, hwm);
 }
 
 template <typename S>
