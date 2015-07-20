@@ -41,14 +41,26 @@ public:
     SendingSocket& operator=(SendingSocket&& other);
 
     template <typename... SendableTypes>
-    bool send(Sendable& sendable, SendableTypes&... sendables);
+    auto send(Sendable& sendable, SendableTypes&... sendables) -> bool;
+
+    auto getLingerPeriod() const      -> int;
+    auto getMulticastHops() const     -> int;
+    auto getSendBufferSize() const    -> int;
+    auto getSendHighWaterMark() const -> int;
+    auto getSendTimeout() const       -> int;
+
+    auto setLingerPeriod(const int milliseconds) -> void;
+    auto setMulticastHops(const int hops)        -> void;
+    auto setSendBufferSize(const int size)       -> void;
+    auto setSendHighWaterMark(const int hwm)     -> void;
+    auto setSendTimeout(const int timeout)       -> void;
 
 protected:
     SendingSocket(void* context, int type);
 
 private:
     // Terminating function for variadic member template.
-    bool send() { return true; }
+    auto send() -> bool { return true; }
 };
 
 template <typename S>
@@ -69,7 +81,8 @@ SendingSocket<S>& SendingSocket<S>::operator=(SendingSocket<S>&& other)
 template <typename S>
 template <typename... SendableTypes>
 inline
-bool SendingSocket<S>::send(Sendable& sendable, SendableTypes&... sendables)
+auto SendingSocket<S>::send( Sendable& sendable
+                           , SendableTypes&... sendables ) -> bool
 {
     if (!sendable.send(*this, (sizeof...(sendables) > 0)))
     {
@@ -77,6 +90,76 @@ bool SendingSocket<S>::send(Sendable& sendable, SendableTypes&... sendables)
     }
 
     return (send(sendables...));
+}
+
+template <typename S>
+inline
+auto SendingSocket<S>::getLingerPeriod() const -> int
+{
+    return (getSocketOption<int>(ZMQ_LINGER));
+}
+
+template <typename S>
+inline
+auto SendingSocket<S>::getMulticastHops() const -> int
+{
+    return (getSocketOption<int>(ZMQ_MULTICAST_HOPS));
+}
+
+template <typename S>
+inline
+auto SendingSocket<S>::getSendBufferSize() const -> int
+{
+    return (getSocketOption<int>(ZMQ_SNDBUF));
+}
+
+template <typename S>
+inline
+auto SendingSocket<S>::getSendHighWaterMark() const -> int
+{
+    return (getSocketOption<int>(ZMQ_SNDHWM));
+}
+
+template <typename S>
+inline
+auto SendingSocket<S>::getSendTimeout() const -> int
+{
+    return (getSocketOption<int>(ZMQ_SNDTIMEO));
+}
+
+template <typename S>
+inline
+auto SendingSocket<S>::setLingerPeriod(const int milliseconds) -> void
+{
+    setSocketOption(ZMQ_LINGER, milliseconds);
+}
+
+template <typename S>
+inline
+auto SendingSocket<S>::setMulticastHops(const int hops) -> void
+{
+    setSocketOption(ZMQ_MULTICAST_HOPS, hops);
+}
+
+template <typename S>
+inline
+auto SendingSocket<S>::setSendBufferSize(const int size) -> void
+{
+    setSocketOption(ZMQ_SNDBUF, size);
+}
+
+template <typename S>
+inline
+auto SendingSocket<S>::setSendHighWaterMark(const int hwm) -> void
+{
+    setSocketOption(ZMQ_SNDHWM, hwm);
+}
+
+template <typename S>
+inline
+auto SendingSocket<S>::setSendTimeout(const int timeout) -> void
+{
+    setSocketOption(ZMQ_SNDTIMEO, timeout);
 }
 
 template <typename S>
