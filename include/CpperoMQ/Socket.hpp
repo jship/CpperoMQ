@@ -48,15 +48,16 @@ public:
     auto connect(const char* address) -> void;
     auto disconnect(const char* address) -> void;
     
-    auto getBacklog() const                   -> int;
-    auto getHandshakeInterval() const         -> int;
-    auto getImmediate() const                 -> bool;
-    auto getIoThreadAffinity() const          -> uint64_t;
-    auto getIPv6() const                      -> bool;
-    auto getMaxReconnectInterval() const      -> int;
-    auto getMulticastRate() const             -> int;
-    auto getMulticastRecoveryInterval() const -> int;
-    auto getReconnectInterval() const         -> int;
+    auto getBacklog() const                                 -> int;
+    auto getHandshakeInterval() const                       -> int;
+    auto getImmediate() const                               -> bool;
+    auto getIoThreadAffinity() const                        -> uint64_t;
+    auto getIPv6() const                                    -> bool;
+    auto getLastEndpoint(size_t length, char* buffer) const -> void;
+    auto getMaxReconnectInterval() const                    -> int;
+    auto getMulticastRate() const                           -> int;
+    auto getMulticastRecoveryInterval() const               -> int;
+    auto getReconnectInterval() const                       -> int;
 
     auto setBacklog(const int backlog)                        -> void;
     auto setConflate(const bool conflate)                     -> void;
@@ -191,6 +192,14 @@ inline
 auto Socket::getIPv6() const -> bool
 {
     return (getSocketOption<bool>(ZMQ_IPV6));
+}
+
+inline
+auto Socket::getLastEndpoint(size_t length, char* buffer) const -> void
+{
+    CPPEROMQ_ASSERT(buffer != nullptr);
+    memset(buffer, 0, length);
+    return (getSocketOption(ZMQ_LAST_ENDPOINT, buffer, &length));
 }
 
 inline
