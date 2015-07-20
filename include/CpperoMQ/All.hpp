@@ -45,3 +45,4 @@
 #include <CpperoMQ/Mixins/ReceivingSocket.hpp>
 #include <CpperoMQ/Mixins/SendingSocket.hpp>
 #include <CpperoMQ/Mixins/SocketTypeWrapper.hpp>
+#include <CpperoMQ/Mixins/SubscribingSocket.hpp>
