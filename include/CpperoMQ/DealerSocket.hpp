@@ -26,6 +26,7 @@
 #include <CpperoMQ/Mixins/ConflatingSocket.hpp>
 #include <CpperoMQ/Mixins/IdentifyingSocket.hpp>
 #include <CpperoMQ/Mixins/ReceivingSocket.hpp>
+#include <CpperoMQ/Mixins/RouterProbingSocket.hpp>
 #include <CpperoMQ/Mixins/SendingSocket.hpp>
 #include <CpperoMQ/Mixins/SocketTypeWrapper.hpp>
 
@@ -33,10 +34,11 @@ namespace CpperoMQ
 {
 
 typedef Mixins::SocketTypeWrapper<ZMQ_DEALER,
-            Mixins::ConflatingSocket<
-                Mixins::IdentifyingSocket<
-                    Mixins::ReceivingSocket<
-                        Mixins::SendingSocket<
-                            Socket > > > > > DealerSocket;
+            Mixins::RouterProbingSocket<
+                Mixins::ConflatingSocket<
+                    Mixins::IdentifyingSocket<
+                        Mixins::ReceivingSocket<
+                            Mixins::SendingSocket<
+                                Socket > > > > > > DealerSocket;
 
 }
