@@ -60,7 +60,6 @@ public:
     auto getReconnectInterval() const                       -> int;
 
     auto setBacklog(const int backlog)                        -> void;
-    auto setConflate(const bool conflate)                     -> void;
     auto setHandshakeInterval(const int milliseconds)         -> void;
     auto setImmediate(const bool immediate)                   -> void;
     auto setIoThreadAffinity(const uint64_t affinity)         -> void;
@@ -230,12 +229,6 @@ inline
 auto Socket::setBacklog(const int backlog) -> void
 {
     setSocketOption(ZMQ_BACKLOG, backlog);
-}
-
-inline
-auto Socket::setConflate(const bool conflate) -> void
-{
-    setSocketOption(ZMQ_CONFLATE, (conflate) ? 1 : 0);
 }
 
 inline 

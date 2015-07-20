@@ -23,6 +23,7 @@
 #pragma once
 
 #include <CpperoMQ/Socket.hpp>
+#include <CpperoMQ/Mixins/ConflatingSocket.hpp>
 #include <CpperoMQ/Mixins/ReceivingSocket.hpp>
 #include <CpperoMQ/Mixins/SocketTypeWrapper.hpp>
 
@@ -30,7 +31,8 @@ namespace CpperoMQ
 {
 
 typedef Mixins::SocketTypeWrapper<ZMQ_PULL,
-            Mixins::ReceivingSocket<
-                Socket > > PullSocket;
+            Mixins::ConflatingSocket<
+                Mixins::ReceivingSocket<
+                    Socket > > > PullSocket;
 
 }

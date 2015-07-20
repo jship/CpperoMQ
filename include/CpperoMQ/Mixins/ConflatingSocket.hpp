@@ -22,21 +22,57 @@
 
 #pragma once
 
-#include <CpperoMQ/Socket.hpp>
-#include <CpperoMQ/Mixins/ConflatingSocket.hpp>
-#include <CpperoMQ/Mixins/IdentifyingSocket.hpp>
-#include <CpperoMQ/Mixins/ReceivingSocket.hpp>
-#include <CpperoMQ/Mixins/SendingSocket.hpp>
-#include <CpperoMQ/Mixins/SocketTypeWrapper.hpp>
-
 namespace CpperoMQ
 {
+namespace Mixins
+{
 
-typedef Mixins::SocketTypeWrapper<ZMQ_DEALER,
-            Mixins::ConflatingSocket<
-                Mixins::IdentifyingSocket<
-                    Mixins::ReceivingSocket<
-                        Mixins::SendingSocket<
-                            Socket > > > > > DealerSocket;
+template <typename S>
+class ConflatingSocket : public S
+{
+public:
+    ConflatingSocket() = delete;
+    virtual ~ConflatingSocket() = default;
+    ConflatingSocket(const ConflatingSocket& other) = delete;
+    ConflatingSocket(ConflatingSocket&& other);
+    ConflatingSocket& operator=(ConflatingSocket& other) = delete;
+    ConflatingSocket& operator=(ConflatingSocket&& other);
 
+    auto setConflate(const bool conflate) -> void;
+
+protected:
+    ConflatingSocket(void* context, int type);
+};
+
+template <typename S>
+inline
+ConflatingSocket<S>::ConflatingSocket(ConflatingSocket<S>&& other)
+    : S(std::move(other))
+{
+}
+
+template <typename S>
+inline
+ConflatingSocket<S>& ConflatingSocket<S>::operator=(ConflatingSocket<S>&& other)
+{
+    S::operator=(std::move(other));
+    return (*this);
+}
+
+template <typename S>
+inline
+auto ConflatingSocket<S>::setConflate(bool conflate) -> void
+{
+    setSocketOption(ZMQ_CONFLATE, (conflate) ? 1 : 0);
+}
+
+
+template <typename S>
+inline
+ConflatingSocket<S>::ConflatingSocket(void* context, int type)
+    : S(context, type)
+{
+}
+
+}
 }
