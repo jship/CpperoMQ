@@ -42,11 +42,11 @@ public:
     Socket& operator=(Socket& other) = delete;
     Socket& operator=(Socket&& other);
 
-    void bind(const char* address);
-    void unbind(const char* address);
+    auto bind(const char* address) -> void;
+    auto unbind(const char* address) -> void;
 
-    void connect(const char* address);
-    void disconnect(const char* address);
+    auto connect(const char* address) -> void;
+    auto disconnect(const char* address) -> void;
     
     auto getBacklog() const                   -> int;
     auto getHandshakeInterval() const         -> int;
@@ -58,31 +58,31 @@ public:
     auto getMulticastRecoveryInterval() const -> int;
     auto getReconnectInterval() const         -> int;
 
-    void setBacklog(const int backlog);
-    void setConflate(const bool conflate);
-    void setHandshakeInterval(const int milliseconds);
-    void setImmediate(const bool immediate);
-    void setIoThreadAffinity(const uint64_t affinity);
-    void setIPv6(const bool ipv6);
-    void setMaxReconnectInterval(const int milliseconds);
-    void setMulticastRate(const int kbps);
-    void setMulticastRecoveryInterval(const int milliseconds);
-    void setReconnectInterval(const int milliseconds);
+    auto setBacklog(const int backlog)                        -> void;
+    auto setConflate(const bool conflate)                     -> void;
+    auto setHandshakeInterval(const int milliseconds)         -> void;
+    auto setImmediate(const bool immediate)                   -> void;
+    auto setIoThreadAffinity(const uint64_t affinity)         -> void;
+    auto setIPv6(const bool ipv6)                             -> void;
+    auto setMaxReconnectInterval(const int milliseconds)      -> void;
+    auto setMulticastRate(const int kbps)                     -> void;
+    auto setMulticastRecoveryInterval(const int milliseconds) -> void;
+    auto setReconnectInterval(const int milliseconds)         -> void;
     
 protected:
     Socket(void* context, int type);
 
     template <typename T>
     auto getSocketOption(const int option) const -> T;
-    void getSocketOption( const int option
+    auto getSocketOption( const int option
                         , void* value
-                        , size_t* valueLength ) const;
+                        , size_t* valueLength ) const -> void;
 
     template <typename T>
-    void setSocketOption(const int option, const T value);
-    void setSocketOption( const int option
+    auto setSocketOption(const int option, const T value) -> void;
+    auto setSocketOption( const int option
                         , const void* value
-                        , const size_t valueLength );
+                        , const size_t valueLength ) -> void;
 
 private:
     void* mSocket;
@@ -115,7 +115,7 @@ Socket& Socket::operator=(Socket&& other)
 }
 
 inline
-void Socket::bind(const char* address)
+auto Socket::bind(const char* address) -> void
 {
     if (0 != zmq_bind(mSocket, address))
     {
@@ -124,7 +124,7 @@ void Socket::bind(const char* address)
 }
 
 inline
-void Socket::unbind(const char* address)
+auto Socket::unbind(const char* address) -> void
 {
     if (0 != zmq_unbind(mSocket, address))
     {
@@ -133,7 +133,7 @@ void Socket::unbind(const char* address)
 }
 
 inline
-void Socket::connect(const char* address)
+auto Socket::connect(const char* address) -> void
 {
     if (0 != zmq_connect(mSocket, address))
     {
@@ -142,7 +142,7 @@ void Socket::connect(const char* address)
 }
 
 inline
-void Socket::disconnect(const char* address)
+auto Socket::disconnect(const char* address) -> void
 {
     if (0 != zmq_disconnect(mSocket, address))
     {
@@ -218,61 +218,61 @@ auto Socket::getReconnectInterval() const -> int
 }
 
 inline
-void Socket::setBacklog(const int backlog)
+auto Socket::setBacklog(const int backlog) -> void
 {
     setSocketOption(ZMQ_BACKLOG, backlog);
 }
 
 inline
-void Socket::setConflate(const bool conflate)
+auto Socket::setConflate(const bool conflate) -> void
 {
     setSocketOption(ZMQ_CONFLATE, (conflate) ? 1 : 0);
 }
 
 inline 
-void Socket::setHandshakeInterval(const int milliseconds)
+auto Socket::setHandshakeInterval(const int milliseconds) -> void
 {
     setSocketOption(ZMQ_HANDSHAKE_IVL, milliseconds);
 }
 
 inline
-void Socket::setImmediate(const bool immediate)
+auto Socket::setImmediate(const bool immediate) -> void
 {
     setSocketOption(ZMQ_IMMEDIATE, (immediate) ? 1 : 0);
 }
 
 inline
-void Socket::setIoThreadAffinity(const uint64_t affinity)
+auto Socket::setIoThreadAffinity(const uint64_t affinity) -> void
 {
     setSocketOption(ZMQ_AFFINITY, affinity);
 }
 
 inline
-void Socket::setIPv6(const bool ipv6)
+auto Socket::setIPv6(const bool ipv6) -> void
 {
     setSocketOption(ZMQ_IPV6, (ipv6) ? 1 : 0);
 }
 
 inline
-void Socket::setMulticastRate(const int kbps)
+auto Socket::setMulticastRate(const int kbps) -> void
 {
     setSocketOption(ZMQ_RATE, kbps);
 }
 
 inline
-void Socket::setMulticastRecoveryInterval(const int milliseconds)
+auto Socket::setMulticastRecoveryInterval(const int milliseconds) -> void
 {
     setSocketOption(ZMQ_RECOVERY_IVL, milliseconds);
 }
 
 inline
-void Socket::setMaxReconnectInterval(const int milliseconds)
+auto Socket::setMaxReconnectInterval(const int milliseconds) -> void
 {
     setSocketOption(ZMQ_RECONNECT_IVL_MAX, milliseconds);
 }
 
 inline
-void Socket::setReconnectInterval(const int milliseconds)
+auto Socket::setReconnectInterval(const int milliseconds) -> void
 {
     setSocketOption(ZMQ_RECONNECT_IVL, milliseconds);
 }
@@ -288,9 +288,9 @@ auto Socket::getSocketOption(const int option) const -> T
 }
 
 inline
-void Socket::getSocketOption( const int option
+auto Socket::getSocketOption( const int option
                             , void* value
-                            , size_t* valueLength ) const
+                            , size_t* valueLength ) const -> void
 {
     if (0 != zmq_getsockopt(mSocket, option, value, valueLength))
     {
@@ -300,15 +300,15 @@ void Socket::getSocketOption( const int option
 
 template <typename T>
 inline
-void Socket::setSocketOption(const int option, const T value)
+auto Socket::setSocketOption(const int option, const T value) -> void
 {
     setSocketOption(option, &value, sizeof(value));
 }
 
 inline
-void Socket::setSocketOption( const int option
+auto Socket::setSocketOption( const int option
                             , const void* value
-                            , const size_t valueLength )
+                            , const size_t valueLength ) -> void
 {
     if (0 != zmq_setsockopt(mSocket, option, value, valueLength))
     {
