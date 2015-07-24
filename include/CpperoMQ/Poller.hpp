@@ -38,19 +38,19 @@ public:
     long getTimeout() const;
     void setTimeout(const long timeout);
 
-    template <typename PollItemType, typename... PollItemTypes>
-    auto poll(PollItemType& pollItem, PollItemTypes&... pollItems) -> void;
+    template <typename... PollItemTypes>
+    auto poll(PollItem& pollItem, PollItemTypes&... pollItems) -> void;
 
 private:
-    template <size_t N, typename PollItemType, typename... PollItemTypes>
+    template <size_t N, typename... PollItemTypes>
     auto poll( std::array<zmq_pollitem_t, N>& pollItemArray
-             , std::array<std::function<void(void)>, N>& callbackArray
-             , PollItemType& pollItem
+             , std::array<PollItem::Callback, N>& callbackArray
+             , PollItem& pollItem
              , PollItemTypes&... pollItems ) -> void;
     
     template <size_t N>
     auto poll( std::array<zmq_pollitem_t, N>& pollItemArray
-             , std::array<std::function<void(void)>, N>& callbackArray ) -> void;
+             , std::array<PollItem::Callback, N>& callbackArray ) -> void;
 
     long mTimeout;
 };
@@ -70,20 +70,20 @@ void Poller::setTimeout(const long timeout)
     mTimeout = timeout;
 }
 
-template <typename PollItemType, typename... PollItemTypes>
+template <typename... PollItemTypes>
 inline
-auto Poller::poll(PollItemType& pollItem, PollItemTypes&... pollItems) -> void
+auto Poller::poll(PollItem& pollItem, PollItemTypes&... pollItems) -> void
 {
     std::array<zmq_pollitem_t,            1 + sizeof...(pollItems)> pollItemArray;
-    std::array<std::function<void(void)>, 1 + sizeof...(pollItems)> callbackArray;
+    std::array<PollItem::Callback, 1 + sizeof...(pollItems)> callbackArray;
 
     poll(pollItemArray, callbackArray, pollItem, pollItems...);
 }
 
-template <size_t N, typename PollItemType, typename... PollItemTypes>
+template <size_t N, typename... PollItemTypes>
 auto Poller::poll( std::array<zmq_pollitem_t, N>& pollItemArray
-                 , std::array<std::function<void(void)>, N>& callbackArray
-                 , PollItemType& pollItem
+                 , std::array<PollItem::Callback, N>& callbackArray
+                 , PollItem& pollItem
                  , PollItemTypes&... pollItems ) -> void
 {
     zmq_pollitem_t internalPollItem;
@@ -100,7 +100,7 @@ auto Poller::poll( std::array<zmq_pollitem_t, N>& pollItemArray
 
 template <size_t N>
 auto Poller::poll( std::array<zmq_pollitem_t, N>& pollItemArray
-                 , std::array<std::function<void(void)>, N>& callbackArray ) -> void
+                 , std::array<PollItem::Callback, N>& callbackArray ) -> void
 {
     if (zmq_poll(pollItemArray.data(), N, mTimeout) < 0)
     {

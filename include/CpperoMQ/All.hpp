@@ -30,6 +30,7 @@
 #include <CpperoMQ/Message.hpp>
 #include <CpperoMQ/OutgoingMessage.hpp>
 #include <CpperoMQ/Poller.hpp>
+#include <CpperoMQ/PollItem.hpp>
 #include <CpperoMQ/Proxy.hpp>
 #include <CpperoMQ/PublishSocket.hpp>
 #include <CpperoMQ/PullSocket.hpp>

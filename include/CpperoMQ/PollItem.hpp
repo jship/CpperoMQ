@@ -37,12 +37,8 @@
 namespace CpperoMQ
 {
 
-template <typename S>
 class PollItem
 {
-    static_assert( std::is_base_of<Socket, S>::value
-                 , "Socket must be base of template parameter 'S'." );
-
 public:
     using Callback = std::function<void(void)>;
 
@@ -54,24 +50,23 @@ public:
     
     int getEvents() const;
 
-    const S* getSocket() const;
-    S* getSocket();
+    const Socket* getSocket() const;
+    Socket* getSocket();
 
     const Callback getCallback() const;
     Callback getCallback();
 
 protected:
-    PollItem(int events, S* socket, Callback callable);
+    PollItem(int events, Socket* socket, Callback callable);
 
 private:
     int mEvents;
-    S* mSocketPtr;
+    Socket* mSocketPtr;
     Callback mCallable;
 };
 
-template <typename S>
 inline
-PollItem<S>::PollItem(PollItem&& other)
+PollItem::PollItem(PollItem&& other)
     : PollItem(0, nullptr, Callback())
 {
     using std::swap;
@@ -80,52 +75,46 @@ PollItem<S>::PollItem(PollItem&& other)
     swap(mCallable,  other.mCallable);
 }
 
-template <typename S>
 inline
-PollItem<S>::PollItem(int events, S* socket, Callback callable)
+PollItem::PollItem(int events, Socket* socket, Callback callable)
     : mEvents(events)
     , mSocketPtr(socket)
     , mCallable(callable)
 {
 }
 
-template <typename S>
 inline
-int PollItem<S>::getEvents() const
+int PollItem::getEvents() const
 {
     return mEvents;
 }
 
-template <typename S>
 inline
-const S* PollItem<S>::getSocket() const
+const Socket* PollItem::getSocket() const
 {
     return mSocketPtr;
 }
 
-template <typename S>
 inline
-S* PollItem<S>::getSocket()
+Socket* PollItem::getSocket()
 {
     return mSocketPtr;
 }
 
-template <typename S>
 inline
-const typename PollItem<S>::Callback PollItem<S>::getCallback() const
+const PollItem::Callback PollItem::getCallback() const
+{
+    return mCallable;
+}
+
+inline
+PollItem::Callback PollItem::getCallback()
 {
     return mCallable;
 }
 
 template <typename S>
-inline
-typename PollItem<S>::Callback PollItem<S>::getCallback()
-{
-    return mCallable;
-}
-
-template <typename S>
-class IsReceiveReady : public PollItem<S>
+class IsReceiveReady : public PollItem
 {
     // This is ugly, but mixins make it tough to use std::is_base_of.
     static_assert( std::is_same<DealerSocket,    S>::value ||
@@ -155,12 +144,12 @@ IsReceiveReady<S>::IsReceiveReady(S& socket, Callback callable)
 template <typename S>
 inline
 IsReceiveReady<S>::IsReceiveReady(IsReceiveReady&& other)
-    : PollItem<S>(std::move(other))
+    : PollItem(std::move(other))
 {
 }
 
 template <typename S>
-class IsSendReady : public PollItem<S>
+class IsSendReady : public PollItem
 {
     // This is ugly, but mixins make it tough to use std::is_base_of.
     static_assert( std::is_same<DealerSocket,    S>::value ||
@@ -190,12 +179,12 @@ IsSendReady<S>::IsSendReady(S& socket, Callback callable)
 template <typename S>
 inline
 IsSendReady<S>::IsSendReady(IsSendReady&& other)
-    : PollItem<S>(std::move(other))
+    : PollItem(std::move(other))
 {
 }
 
 template <typename S>
-class IsSendOrReceiveReady : public PollItem<S>
+class IsSendOrReceiveReady : public PollItem
 {
     // This is ugly, but mixins make it tough to use std::is_base_of.
     static_assert( std::is_same<DealerSocket,  S>::value ||
@@ -223,13 +212,13 @@ IsSendOrReceiveReady<S>::IsSendOrReceiveReady(S& socket, Callback callable)
 template <typename S>
 inline
 IsSendOrReceiveReady<S>::IsSendOrReceiveReady(IsSendOrReceiveReady&& other)
-    : PollItem<S>(std::move(other))
+    : PollItem(std::move(other))
 {
 }
 
 template <typename S>
 inline
-IsReceiveReady<S> isReceiveReady(S& socket, typename PollItem<S>::Callback callable)
+IsReceiveReady<S> isReceiveReady(S& socket, PollItem::Callback callable)
 {
     IsReceiveReady<S> receiveReady(socket, callable);
     return (receiveReady);
@@ -237,7 +226,7 @@ IsReceiveReady<S> isReceiveReady(S& socket, typename PollItem<S>::Callback calla
 
 template <typename S>
 inline
-IsSendReady<S> isSendReady(S& socket, typename PollItem<S>::Callback callable)
+IsSendReady<S> isSendReady(S& socket, PollItem::Callback callable)
 {
     IsSendReady<S> sendReady(socket, callable);
     return (sendReady);
@@ -245,7 +234,7 @@ IsSendReady<S> isSendReady(S& socket, typename PollItem<S>::Callback callable)
 
 template <typename S>
 inline
-IsSendOrReceiveReady<S> isSendOrReceiveReady(S& socket, typename PollItem<S>::Callback callable)
+IsSendOrReceiveReady<S> isSendOrReceiveReady(S& socket, PollItem::Callback callable)
 {
     IsSendOrReceiveReady<S> sendOrReceiveReady(socket, callable);
     return (sendOrReceiveReady);
