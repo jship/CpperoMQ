@@ -68,6 +68,8 @@ public:
     auto setMulticastRate(const int kbps)                     -> void;
     auto setMulticastRecoveryInterval(const int milliseconds) -> void;
     auto setReconnectInterval(const int milliseconds)         -> void;
+
+    explicit operator void*();
     
 protected:
     Socket(void* context, int type);
@@ -277,6 +279,12 @@ inline
 auto Socket::setReconnectInterval(const int milliseconds) -> void
 {
     setSocketOption(ZMQ_RECONNECT_IVL, milliseconds);
+}
+
+inline
+Socket::operator void*()
+{
+    return mSocket;
 }
 
 template <typename T>
