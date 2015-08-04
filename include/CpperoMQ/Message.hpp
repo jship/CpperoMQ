@@ -78,7 +78,7 @@ Message::Message(const Message& other)
         void* otherData = zmq_msg_data(other.mMsg.get());
         CPPEROMQ_ASSERT(nullptr != otherData);
 
-		memcpy(msgData, otherData, otherSize);
+        memcpy(msgData, otherData, otherSize);
     }
 }
 
