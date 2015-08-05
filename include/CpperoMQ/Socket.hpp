@@ -38,9 +38,7 @@ public:
     Socket() = delete;
     virtual ~Socket();
     Socket(const Socket& other) = delete;
-    Socket(Socket&& other);
     Socket& operator=(Socket& other) = delete;
-    Socket& operator=(Socket&& other);
 
     auto bind(const char* address) -> void;
     auto unbind(const char* address) -> void;
@@ -73,6 +71,8 @@ public:
     
 protected:
     Socket(void* context, int type);
+    Socket(Socket&& other);
+    Socket& operator=(Socket&& other);
 
     template <typename T>
     auto getSocketOption(const int option) const -> T;
@@ -99,21 +99,6 @@ Socket::~Socket()
         CPPEROMQ_ASSERT(result == 0);
         mSocket = 0 ;
     }
-}
-
-inline
-Socket::Socket(Socket&& other)
-    : mSocket(other.mSocket)
-{
-    other.mSocket = nullptr;
-}
-
-inline
-Socket& Socket::operator=(Socket&& other)
-{
-    using std::swap;
-    swap(mSocket, other.mSocket);
-    return (*this);
 }
 
 inline
@@ -163,6 +148,21 @@ Socket::Socket(void* context, int type)
     {
         throw Error();
     }
+}
+
+inline
+Socket::Socket(Socket&& other)
+    : mSocket(other.mSocket)
+{
+    other.mSocket = nullptr;
+}
+
+inline
+Socket& Socket::operator=(Socket&& other)
+{
+    using std::swap;
+    swap(mSocket, other.mSocket);
+    return (*this);
 }
 
 inline
