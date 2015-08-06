@@ -32,7 +32,7 @@ class Sendable
 public:
     virtual ~Sendable() {}
 
-    virtual bool send(Socket& socket, const bool moreToSend) = 0;
+    virtual auto send(Socket& socket, const bool moreToSend) -> bool = 0;
 };
 
 }

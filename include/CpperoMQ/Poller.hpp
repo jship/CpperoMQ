@@ -35,8 +35,8 @@ class Poller
 public:
     Poller(const long timeout);
 
-    long getTimeout() const;
-    void setTimeout(const long timeout);
+    auto getTimeout() const -> long;
+    auto setTimeout(const long timeout) -> void;
 
     template <typename... PollItemTypes>
     auto poll(PollItem& pollItem, PollItemTypes&... pollItems) -> void;
@@ -60,12 +60,12 @@ Poller::Poller(const long timeout)
 {
 }
 
-long Poller::getTimeout() const
+auto Poller::getTimeout() const -> long
 {
     return mTimeout;
 }
 
-void Poller::setTimeout(const long timeout)
+auto Poller::setTimeout(const long timeout) -> void
 {
     mTimeout = timeout;
 }

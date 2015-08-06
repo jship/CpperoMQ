@@ -37,15 +37,15 @@ public:
     Message(Message&& other);
     Message& operator=(Message other);
 
-    friend void swap(Message& lhs, Message& rhs);
+    friend auto swap(Message& lhs, Message& rhs) -> void;
 
 protected:
     Message();
     Message(const size_t size, const void* sourceData);
 
-    const std::unique_ptr<zmq_msg_t>& getInternalMessage() const;
+    auto getInternalMessage() const -> const std::unique_ptr<zmq_msg_t>&;
 
-    void shallowCopy(Message& dest);
+    auto shallowCopy(Message& dest) -> void;
 
 private:
     std::unique_ptr<zmq_msg_t> mMsg;
@@ -123,13 +123,13 @@ Message::Message(const size_t size, const void* sourceData)
 }
 
 inline
-const std::unique_ptr<zmq_msg_t>& Message::getInternalMessage() const
+auto Message::getInternalMessage() const -> const std::unique_ptr<zmq_msg_t>&
 {
     return (mMsg);
 }
 
 inline
-void Message::shallowCopy(Message& dest)
+auto Message::shallowCopy(Message& dest) -> void
 {
     CPPEROMQ_ASSERT(nullptr != mMsg.get());
     CPPEROMQ_ASSERT(nullptr != dest.mMsg.get());
@@ -141,7 +141,7 @@ void Message::shallowCopy(Message& dest)
 }
 
 inline
-void swap(Message& lhs, Message& rhs)
+auto swap(Message& lhs, Message& rhs) -> void
 {
     using std::swap;
     swap(lhs.mMsg, rhs.mMsg);

@@ -33,8 +33,8 @@ class Error final : public std::exception
 public:
     Error();
 
-    virtual const char* what() const override;
-    int number() const;
+    virtual auto what() const -> const char* override;
+    auto number() const -> int;
 
 private:
     int mErrorNumber;
@@ -47,13 +47,13 @@ Error::Error()
 }
 
 inline
-const char* Error::what() const
+auto Error::what() const -> const char*
 {
     return zmq_strerror(mErrorNumber);
 }
 
 inline
-int Error::number() const
+auto Error::number() const -> int
 {
     return mErrorNumber;
 }

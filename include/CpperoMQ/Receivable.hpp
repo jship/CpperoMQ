@@ -32,7 +32,7 @@ class Receivable
 public:
     virtual ~Receivable() {}
 
-    virtual bool receive(Socket& socket, bool& moreToReceive) = 0;
+    virtual auto receive(Socket& socket, bool& moreToReceive) -> bool = 0;
 };
 
 }

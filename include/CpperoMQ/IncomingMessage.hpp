@@ -39,10 +39,10 @@ public:
     IncomingMessage& operator=(const IncomingMessage& other);
     IncomingMessage& operator=(IncomingMessage&& other);
 
-    const size_t size() const;
-    const void * data() const;
+    auto size() const -> size_t;
+    auto data() const -> const void*;
 
-    virtual bool receive(Socket& socket, bool& moreToReceive) override;
+    virtual auto receive(Socket& socket, bool& moreToReceive) -> bool override;
 };
 
 inline
@@ -72,21 +72,21 @@ IncomingMessage& IncomingMessage::operator=(IncomingMessage&& other)
 }
 
 inline
-const size_t IncomingMessage::size() const
+auto IncomingMessage::size() const -> size_t
 {
     CPPEROMQ_ASSERT(nullptr != getInternalMessage().get());
     return (zmq_msg_size(const_cast<zmq_msg_t*>(getInternalMessage().get())));
 }
 
 inline
-const void * IncomingMessage::data() const
+auto IncomingMessage::data() const -> const void*
 {
     CPPEROMQ_ASSERT(nullptr != getInternalMessage().get());
     return (zmq_msg_data(const_cast<zmq_msg_t*>(getInternalMessage().get())));
 }
 
 inline
-bool IncomingMessage::receive(Socket& socket, bool& moreToReceive)
+auto IncomingMessage::receive(Socket& socket, bool& moreToReceive) -> bool
 {
     CPPEROMQ_ASSERT(nullptr != getInternalMessage().get());
     CPPEROMQ_ASSERT(nullptr != socket.mSocket);

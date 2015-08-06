@@ -40,7 +40,7 @@ public:
     OutgoingMessage& operator=(const OutgoingMessage& other);
     OutgoingMessage& operator=(OutgoingMessage&& other);
 
-    virtual bool send(Socket& socket, const bool moreToSend) override;
+    virtual auto send(Socket& socket, const bool moreToSend) -> bool override;
 };
 
 inline
@@ -77,7 +77,7 @@ OutgoingMessage& OutgoingMessage::operator=(OutgoingMessage&& other)
 }
 
 inline
-bool OutgoingMessage::send(Socket& socket, const bool moreToSend)
+auto OutgoingMessage::send(Socket& socket, const bool moreToSend) -> bool
 {
     CPPEROMQ_ASSERT(nullptr != getInternalMessage().get());
     CPPEROMQ_ASSERT(nullptr != socket.mSocket);

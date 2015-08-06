@@ -48,13 +48,12 @@ public:
     PollItem& operator=(const PollItem& other) = delete;
     PollItem& operator=(PollItem&& other) = delete;
     
-    int getEvents() const;
+    auto getEvents() const -> int;
 
-    const Socket* getSocket() const;
-    Socket* getSocket();
+    auto getSocket() const -> const Socket*;
+    auto getSocket()       ->       Socket*;
 
-    const Callback getCallback() const;
-    Callback getCallback();
+    auto getCallback() -> Callback;
 
 protected:
     PollItem(int events, Socket* socket, Callback callable);
@@ -84,31 +83,25 @@ PollItem::PollItem(int events, Socket* socket, Callback callable)
 }
 
 inline
-int PollItem::getEvents() const
+auto PollItem::getEvents() const -> int
 {
     return mEvents;
 }
 
 inline
-const Socket* PollItem::getSocket() const
+auto PollItem::getSocket() const -> const Socket*
 {
     return mSocketPtr;
 }
 
 inline
-Socket* PollItem::getSocket()
+auto PollItem::getSocket() -> Socket*
 {
     return mSocketPtr;
 }
 
 inline
-const PollItem::Callback PollItem::getCallback() const
-{
-    return mCallable;
-}
-
-inline
-PollItem::Callback PollItem::getCallback()
+auto PollItem::getCallback() -> PollItem::Callback
 {
     return mCallable;
 }
@@ -152,12 +145,12 @@ template <typename S>
 class IsSendReady : public PollItem
 {
     // This is ugly, but mixins make it tough to use std::is_base_of.
-    static_assert( std::is_same<DealerSocket,    S>::value ||
-                   std::is_same<PublishSocket,   S>::value ||
-                   std::is_same<PushSocket,      S>::value ||
-                   std::is_same<ReplySocket,     S>::value ||
-                   std::is_same<RequestSocket,   S>::value ||
-                   std::is_same<RouterSocket,    S>::value
+    static_assert( std::is_same<DealerSocket,  S>::value ||
+                   std::is_same<PublishSocket, S>::value ||
+                   std::is_same<PushSocket,    S>::value ||
+                   std::is_same<ReplySocket,   S>::value ||
+                   std::is_same<RequestSocket, S>::value ||
+                   std::is_same<RouterSocket,  S>::value
                  , "Template parameter 'S' must inherit SendingSocket mixin." );
 
 public:
@@ -218,7 +211,7 @@ IsSendOrReceiveReady<S>::IsSendOrReceiveReady(IsSendOrReceiveReady&& other)
 
 template <typename S>
 inline
-IsReceiveReady<S> isReceiveReady(S& socket, PollItem::Callback callable)
+auto isReceiveReady(S& socket, PollItem::Callback callable) -> IsReceiveReady<S>
 {
     IsReceiveReady<S> receiveReady(socket, callable);
     return (receiveReady);
@@ -226,7 +219,7 @@ IsReceiveReady<S> isReceiveReady(S& socket, PollItem::Callback callable)
 
 template <typename S>
 inline
-IsSendReady<S> isSendReady(S& socket, PollItem::Callback callable)
+auto isSendReady(S& socket, PollItem::Callback callable) -> IsSendReady<S>
 {
     IsSendReady<S> sendReady(socket, callable);
     return (sendReady);
@@ -234,7 +227,7 @@ IsSendReady<S> isSendReady(S& socket, PollItem::Callback callable)
 
 template <typename S>
 inline
-IsSendOrReceiveReady<S> isSendOrReceiveReady(S& socket, PollItem::Callback callable)
+auto isSendOrReceiveReady(S& socket, PollItem::Callback callable) -> IsSendOrReceiveReady<S>
 {
     IsSendOrReceiveReady<S> sendOrReceiveReady(socket, callable);
     return (sendOrReceiveReady);

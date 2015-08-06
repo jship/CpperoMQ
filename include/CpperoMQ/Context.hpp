@@ -44,28 +44,28 @@ public:
     Context & operator=(const Context & rhs) = delete;
     Context& operator=(Context&& other);
 
-    DealerSocket createDealerSocket();
-    PublishSocket createPublishSocket();
-    PullSocket createPullSocket();
-    PushSocket createPushSocket();
-    ReplySocket createReplySocket();
-    RequestSocket createRequestSocket();
-    RouterSocket createRouterSocket();
-    SubscribeSocket createSubscribeSocket();
+    auto createDealerSocket()    -> DealerSocket;
+    auto createPublishSocket()   -> PublishSocket;
+    auto createPullSocket()      -> PullSocket;
+    auto createPushSocket()      -> PushSocket;
+    auto createReplySocket()     -> ReplySocket;
+    auto createRequestSocket()   -> RequestSocket;
+    auto createRouterSocket()    -> RouterSocket;
+    auto createSubscribeSocket() -> SubscribeSocket;
 
-    int getIoThreadCount() const;
-    int getMaxSocketCount() const;
-    int getMaxConfigurableSocketCount() const;
+    auto getIoThreadCount() const              -> int;
+    auto getMaxSocketCount() const             -> int;
+    auto getMaxConfigurableSocketCount() const -> int;
 
-    bool isIPv6Enabled() const;
-    bool isBlocky() const;
+    auto isIPv6Enabled() const -> bool;
+    auto isBlocky() const      -> bool;
 
-    void setIPv6Enabled(bool enabled);
-    void setBlocky(bool blocky);
+    auto setIPv6Enabled(bool enabled) -> void;
+    auto setBlocky(bool blocky)       -> void;
 
 private:
-    int getContextSetting(const int settingName) const;
-    void setContextSetting(int settingName, int settingValue);
+    auto getContextSetting(const int settingName) const -> int;
+    auto setContextSetting(int settingName, int settingValue) -> void;
 
     void* mContext;
 };
@@ -110,105 +110,105 @@ Context& Context::operator=(Context&& other)
 }
 
 inline
-DealerSocket Context::createDealerSocket()
+auto Context::createDealerSocket() -> DealerSocket
 {
     DealerSocket socket(mContext);
     return socket;
 }
 
 inline
-PublishSocket Context::createPublishSocket()
+auto Context::createPublishSocket() -> PublishSocket
 {
     PublishSocket socket(mContext);
     return socket;
 }
 
 inline
-PullSocket Context::createPullSocket()
+auto Context::createPullSocket() -> PullSocket
 {
     PullSocket socket(mContext);
     return socket;
 }
 
 inline
-PushSocket Context::createPushSocket()
+auto Context::createPushSocket() -> PushSocket
 {
     PushSocket socket(mContext);
     return socket;
 }
 
 inline
-ReplySocket Context::createReplySocket()
+auto Context::createReplySocket() -> ReplySocket
 {
     ReplySocket socket(mContext);
     return socket;
 }
 
 inline
-RequestSocket Context::createRequestSocket()
+auto Context::createRequestSocket() -> RequestSocket
 {
     RequestSocket socket(mContext);
     return socket;
 }
 
 inline
-RouterSocket Context::createRouterSocket()
+auto Context::createRouterSocket() -> RouterSocket
 {
     RouterSocket socket(mContext);
     return socket;
 }
 
 inline
-SubscribeSocket Context::createSubscribeSocket()
+auto Context::createSubscribeSocket() -> SubscribeSocket
 {
     SubscribeSocket socket(mContext);
     return socket;
 }
 
 inline
-int Context::getIoThreadCount() const
+auto Context::getIoThreadCount() const -> int
 {
     return (getContextSetting(ZMQ_IO_THREADS));
 }
 
 inline
-int Context::getMaxSocketCount() const
+auto Context::getMaxSocketCount() const -> int
 {
     return (getContextSetting(ZMQ_MAX_SOCKETS));
 }
 
 inline
-int Context::getMaxConfigurableSocketCount() const
+auto Context::getMaxConfigurableSocketCount() const -> int
 {
     return (getContextSetting(ZMQ_SOCKET_LIMIT));
 }
 
 inline
-bool Context::isIPv6Enabled() const
+auto Context::isIPv6Enabled() const -> bool
 {
     return (1 == getContextSetting(ZMQ_IPV6));
 }
 
 inline
-bool Context::isBlocky() const
+auto Context::isBlocky() const -> bool
 {
     return (1 == getContextSetting(ZMQ_BLOCKY));
 }
 
 inline
-void Context::setIPv6Enabled(bool enabled)
+auto Context::setIPv6Enabled(bool enabled) -> void
 {
     setContextSetting(ZMQ_IPV6, enabled ? 1 : 0);
 }
 
 inline
-void Context::setBlocky(bool blocky)
+auto Context::setBlocky(bool blocky) -> void
 {
     setContextSetting(ZMQ_BLOCKY, blocky ? 1 : 0);
 }
 
 inline
-int Context::getContextSetting(const int settingName) const
+auto Context::getContextSetting(const int settingName) const -> int
 {
     int result = zmq_ctx_get(mContext, settingName);
 
@@ -221,7 +221,7 @@ int Context::getContextSetting(const int settingName) const
 }
 
 inline
-void Context::setContextSetting(int settingName, int settingValue)
+auto Context::setContextSetting(int settingName, int settingValue) -> void
 {
     if (0 != zmq_ctx_set(mContext, settingName, settingValue))
     {

@@ -34,10 +34,10 @@ class Version
 public:
     Version();
 
-    const std::tuple<int, int, int> getTuple() const;
-    const int getMajor() const;
-    const int getMinor() const;
-    const int getPatch() const;
+    auto getTuple() const -> std::tuple<int, int, int>;
+    auto getMajor() const -> int;
+    auto getMinor() const -> int;
+    auto getPatch() const -> int;
 
 private:
     int mMajor;
@@ -55,25 +55,25 @@ Version::Version()
 }
 
 inline
-const std::tuple<int, int, int> Version::getTuple() const
+auto Version::getTuple() const -> std::tuple<int, int, int>
 {
     return std::make_tuple(mMajor, mMinor, mPatch);
 }
 
 inline
-const int Version::getMajor() const
+auto Version::getMajor() const -> int
 {
     return mMajor;
 }
 
 inline
-const int Version::getMinor() const
+auto Version::getMinor() const -> int
 {
     return mMinor;
 }
 
 inline
-const int Version::getPatch() const
+auto Version::getPatch() const -> int
 {
     return mPatch;
 }
