@@ -24,8 +24,6 @@
 
 #include <CpperoMQ/Common.hpp>
 
-#include <memory>
-
 namespace CpperoMQ
 {
 
@@ -33,53 +31,31 @@ class Message
 {
 public:
     virtual ~Message();
-    Message(const Message& other);
+    Message(const Message& other) = delete;
     Message(Message&& other);
-    Message& operator=(Message other);
-
+    Message& operator=(const Message& other) = delete;
+    Message& operator=(Message&& other);
+    
     friend auto swap(Message& lhs, Message& rhs) -> void;
 
 protected:
     Message();
     Message(const size_t size, const void* sourceData);
 
-    auto getInternalMessage() const -> const std::unique_ptr<zmq_msg_t>&;
+    auto getInternalMessage() const -> const zmq_msg_t* const;
+    auto getInternalMessage()       ->       zmq_msg_t*;
 
     auto shallowCopy(Message& dest) -> void;
 
 private:
-    std::unique_ptr<zmq_msg_t> mMsg;
+    zmq_msg_t mMsg;
 };
 
 inline
 Message::~Message()
 {
-    CPPEROMQ_ASSERT(nullptr != mMsg.get());
-    CPPEROMQ_ASSERT(0 == zmq_msg_close(mMsg.get()));
-}
-
-inline
-Message::Message(const Message& other)
-    : mMsg(new zmq_msg_t)
-{
-    CPPEROMQ_ASSERT(nullptr != other.mMsg.get());
-
-    const size_t otherSize = zmq_msg_size(other.mMsg.get());
-    if (0 != zmq_msg_init_size(mMsg.get(), otherSize))
-    {
-        throw Error();
-    }
-
-    if (otherSize > 0)
-    {
-        void* msgData = zmq_msg_data(mMsg.get());
-        CPPEROMQ_ASSERT(nullptr != msgData);
-
-        void* otherData = zmq_msg_data(other.mMsg.get());
-        CPPEROMQ_ASSERT(nullptr != otherData);
-
-        memcpy(msgData, otherData, otherSize);
-    }
+    int result = zmq_msg_close(&mMsg);
+    CPPEROMQ_ASSERT(0 == result);
 }
 
 inline
@@ -90,7 +66,7 @@ Message::Message(Message&& other)
 }
 
 inline
-Message& Message::operator=(Message other)
+Message& Message::operator=(Message&& other)
 {
     swap(*this, other);
     return (*this);
@@ -98,9 +74,8 @@ Message& Message::operator=(Message other)
 
 inline
 Message::Message()
-    : mMsg(new zmq_msg_t)
 {
-    if (0 != zmq_msg_init(mMsg.get()))
+    if (0 != zmq_msg_init(&mMsg))
     {
         throw Error();
     }
@@ -108,33 +83,35 @@ Message::Message()
 
 inline
 Message::Message(const size_t size, const void* sourceData)
-    : mMsg(new zmq_msg_t)
 {
     CPPEROMQ_ASSERT(nullptr != sourceData);
 
-    if (0 != zmq_msg_init_size(mMsg.get(), size))
+    if (0 != zmq_msg_init_size(&mMsg, size))
     {
         throw Error();
     }
 
-    void* msgData = zmq_msg_data(mMsg.get());
+    void* msgData = zmq_msg_data(&mMsg);
     CPPEROMQ_ASSERT(nullptr != msgData);
     memcpy(msgData, sourceData, size);
 }
 
 inline
-auto Message::getInternalMessage() const -> const std::unique_ptr<zmq_msg_t>&
+auto Message::getInternalMessage() const -> const zmq_msg_t* const
 {
-    return (mMsg);
+    return (&mMsg);
+}
+
+inline
+auto Message::getInternalMessage() -> zmq_msg_t*
+{
+    return (&mMsg);
 }
 
 inline
 auto Message::shallowCopy(Message& dest) -> void
 {
-    CPPEROMQ_ASSERT(nullptr != mMsg.get());
-    CPPEROMQ_ASSERT(nullptr != dest.mMsg.get());
-
-    if (0 != zmq_msg_copy(dest.mMsg.get(), mMsg.get()))
+    if (0 != zmq_msg_copy(&dest.mMsg, &mMsg))
     {
         throw Error();
     }

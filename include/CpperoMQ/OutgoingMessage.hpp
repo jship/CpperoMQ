@@ -35,9 +35,9 @@ public:
     OutgoingMessage(const size_t size, const void* sourceData);
     OutgoingMessage(); // for empty frames
     virtual ~OutgoingMessage() = default;
-    OutgoingMessage(OutgoingMessage& other) = default;
+    OutgoingMessage(const OutgoingMessage& other) = delete;
     OutgoingMessage(OutgoingMessage&& other);
-    OutgoingMessage& operator=(const OutgoingMessage& other);
+    OutgoingMessage& operator=(const OutgoingMessage& other) = delete;
     OutgoingMessage& operator=(OutgoingMessage&& other);
 
     virtual auto send(Socket& socket, const bool moreToSend) -> bool override;
@@ -62,14 +62,6 @@ OutgoingMessage::OutgoingMessage(OutgoingMessage&& other)
 }
 
 inline
-OutgoingMessage& OutgoingMessage::operator=(const OutgoingMessage& other)
-{
-    Message::operator=(other);
-    return (*this);
-}
-
-
-inline
 OutgoingMessage& OutgoingMessage::operator=(OutgoingMessage&& other)
 {
     Message::operator=(std::move(other));
@@ -79,16 +71,19 @@ OutgoingMessage& OutgoingMessage::operator=(OutgoingMessage&& other)
 inline
 auto OutgoingMessage::send(Socket& socket, const bool moreToSend) -> bool
 {
-    CPPEROMQ_ASSERT(nullptr != getInternalMessage().get());
+    zmq_msg_t* msgPtr = getInternalMessage();
+
+    CPPEROMQ_ASSERT(nullptr != msgPtr);
     CPPEROMQ_ASSERT(nullptr != socket.mSocket);
 
     OutgoingMessage message;
     shallowCopy(message);
+    msgPtr = message.getInternalMessage();
+
+    CPPEROMQ_ASSERT(nullptr != msgPtr);
 
     const int flags = (moreToSend) ? ZMQ_SNDMORE : 0;
-    if (zmq_msg_send( message.getInternalMessage().get()
-                    , socket.mSocket
-                    , flags ) >= 0)
+    if (zmq_msg_send(msgPtr, socket.mSocket, flags) >= 0)
     {
         return true;
     }

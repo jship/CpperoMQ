@@ -34,9 +34,9 @@ class IncomingMessage final : public Message, public Receivable
 public:
     IncomingMessage();
     virtual ~IncomingMessage() = default;
-    IncomingMessage(IncomingMessage& other) = default;
+    IncomingMessage(const IncomingMessage& other) = delete;
     IncomingMessage(IncomingMessage&& other);
-    IncomingMessage& operator=(const IncomingMessage& other);
+    IncomingMessage& operator=(const IncomingMessage& other) = delete;
     IncomingMessage& operator=(IncomingMessage&& other);
 
     auto size() const -> size_t;
@@ -58,13 +58,6 @@ IncomingMessage::IncomingMessage(IncomingMessage&& other)
 }
 
 inline
-IncomingMessage& IncomingMessage::operator=(const IncomingMessage& other)
-{
-    Message::operator=(other);
-    return (*this);
-}
-
-inline
 IncomingMessage& IncomingMessage::operator=(IncomingMessage&& other)
 {
     Message::operator=(std::move(other));
@@ -74,29 +67,33 @@ IncomingMessage& IncomingMessage::operator=(IncomingMessage&& other)
 inline
 auto IncomingMessage::size() const -> size_t
 {
-    CPPEROMQ_ASSERT(nullptr != getInternalMessage().get());
-    return (zmq_msg_size(const_cast<zmq_msg_t*>(getInternalMessage().get())));
+    const zmq_msg_t* const msgPtr = getInternalMessage();
+    CPPEROMQ_ASSERT(nullptr != msgPtr);
+    return (zmq_msg_size(const_cast<zmq_msg_t*>(msgPtr)));
 }
 
 inline
 auto IncomingMessage::data() const -> const void*
 {
-    CPPEROMQ_ASSERT(nullptr != getInternalMessage().get());
-    return (zmq_msg_data(const_cast<zmq_msg_t*>(getInternalMessage().get())));
+    const zmq_msg_t* const msgPtr = getInternalMessage();
+    CPPEROMQ_ASSERT(nullptr != msgPtr);
+    return (zmq_msg_data(const_cast<zmq_msg_t*>(msgPtr)));
 }
 
 inline
 auto IncomingMessage::receive(Socket& socket, bool& moreToReceive) -> bool
 {
-    CPPEROMQ_ASSERT(nullptr != getInternalMessage().get());
+    zmq_msg_t* msgPtr = getInternalMessage();
+
+    CPPEROMQ_ASSERT(nullptr != msgPtr);
     CPPEROMQ_ASSERT(nullptr != socket.mSocket);
 
-    if (0 != zmq_msg_close(getInternalMessage().get()))
+    if (0 != zmq_msg_close(msgPtr))
     {
         throw Error();
     }
 
-    if (0 != zmq_msg_init(getInternalMessage().get()))
+    if (0 != zmq_msg_init(msgPtr))
     {
         throw Error();
     }
@@ -104,9 +101,9 @@ auto IncomingMessage::receive(Socket& socket, bool& moreToReceive) -> bool
     moreToReceive = false;
 
     const int flags = 0;
-    if (zmq_msg_recv(getInternalMessage().get(), socket.mSocket, flags) >= 0)
+    if (zmq_msg_recv(msgPtr, socket.mSocket, flags) >= 0)
     {
-        moreToReceive = (0 != zmq_msg_more(getInternalMessage().get()));
+        moreToReceive = (0 != zmq_msg_more(msgPtr));
         return true;
     }
 
