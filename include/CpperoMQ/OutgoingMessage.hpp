@@ -33,6 +33,8 @@ class OutgoingMessage final : public Message, public Sendable
 {
 public:
     OutgoingMessage(const size_t size, const void* sourceData);
+    OutgoingMessage(const size_t size, const char* sourceData);
+    OutgoingMessage(const char* sourceData);
     OutgoingMessage(); // for empty frames
     virtual ~OutgoingMessage() = default;
     OutgoingMessage(const OutgoingMessage& other) = delete;
@@ -46,6 +48,18 @@ public:
 inline
 OutgoingMessage::OutgoingMessage(const size_t size, const void* sourceData)
     : Message(size, sourceData)
+{
+}
+
+inline
+OutgoingMessage::OutgoingMessage(const size_t size, const char* sourceData)
+    : Message(size, sourceData)
+{
+}
+
+inline
+OutgoingMessage::OutgoingMessage(const char* sourceData)
+    : Message(std::strlen(sourceData), sourceData)
 {
 }
 

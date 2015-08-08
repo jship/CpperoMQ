@@ -41,6 +41,7 @@ public:
 
     auto size() const -> size_t;
     auto data() const -> const void*;
+    auto charData() const -> const char*;
 
     virtual auto receive(Socket& socket, bool& moreToReceive) -> bool override;
 };
@@ -78,6 +79,12 @@ auto IncomingMessage::data() const -> const void*
     const zmq_msg_t* const msgPtr = getInternalMessage();
     CPPEROMQ_ASSERT(nullptr != msgPtr);
     return (zmq_msg_data(const_cast<zmq_msg_t*>(msgPtr)));
+}
+
+inline
+auto IncomingMessage::charData() const -> const char*
+{
+    return (static_cast<const char*>(data()));
 }
 
 inline
