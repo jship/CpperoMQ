@@ -33,7 +33,7 @@ namespace CpperoMQ
 class Poller
 {
 public:
-    Poller(const long timeout);
+    Poller(const long timeout = -1);
 
     auto getTimeout() const -> long;
     auto setTimeout(const long timeout) -> void;
@@ -74,7 +74,7 @@ template <typename... PollItemTypes>
 inline
 auto Poller::poll(PollItem& pollItem, PollItemTypes&... pollItems) -> void
 {
-    std::array<zmq_pollitem_t,            1 + sizeof...(pollItems)> pollItemArray;
+    std::array<zmq_pollitem_t,     1 + sizeof...(pollItems)> pollItemArray;
     std::array<PollItem::Callback, 1 + sizeof...(pollItems)> callbackArray;
 
     poll(pollItemArray, callbackArray, pollItem, pollItems...);
@@ -86,8 +86,10 @@ auto Poller::poll( std::array<zmq_pollitem_t, N>& pollItemArray
                  , PollItem& pollItem
                  , PollItemTypes&... pollItems ) -> void
 {
+    CPPEROMQ_ASSERT(nullptr != pollItem.getRawSocket());
+
     zmq_pollitem_t internalPollItem;
-    internalPollItem.socket  = static_cast<void*>(pollItem.getSocket());
+    internalPollItem.socket  = static_cast<void*>(pollItem.getRawSocket());
     internalPollItem.fd      = 0;
     internalPollItem.events  = pollItem.getEvents();
     internalPollItem.revents = 0;

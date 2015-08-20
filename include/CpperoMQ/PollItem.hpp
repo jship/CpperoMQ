@@ -50,15 +50,17 @@ public:
     
     auto getEvents() const -> int;
 
-    auto getSocket() const -> const Socket*;
-    auto getSocket()       ->       Socket*;
+    auto getRawSocket() const -> const void*;
+    auto getRawSocket()       ->       void*;
 
     auto getCallback() -> Callback;
 
 protected:
-    PollItem(int events, Socket* socket, Callback callable);
+    PollItem(int events, Socket& socket, Callback callable);
 
 private:
+    PollItem(int events, Socket* socket, Callback callable);
+
     int mEvents;
     Socket* mSocketPtr;
     Callback mCallable;
@@ -72,6 +74,12 @@ PollItem::PollItem(PollItem&& other)
     swap(mEvents,    other.mEvents);
     swap(mSocketPtr, other.mSocketPtr);
     swap(mCallable,  other.mCallable);
+}
+
+inline
+PollItem::PollItem(int events, Socket& socket, Callback callable)
+    : PollItem(events, &socket, callable)
+{
 }
 
 inline
@@ -89,15 +97,15 @@ auto PollItem::getEvents() const -> int
 }
 
 inline
-auto PollItem::getSocket() const -> const Socket*
+auto PollItem::getRawSocket() const -> const void*
 {
-    return mSocketPtr;
+    return (mSocketPtr) ? static_cast<void*>(*mSocketPtr) : nullptr;
 }
 
 inline
-auto PollItem::getSocket() -> Socket*
+auto PollItem::getRawSocket() -> void*
 {
-    return mSocketPtr;
+    return (mSocketPtr) ? static_cast<void*>(*mSocketPtr) : nullptr;
 }
 
 inline
@@ -130,7 +138,7 @@ public:
 template <typename S>
 inline
 IsReceiveReady<S>::IsReceiveReady(S& socket, Callback callable)
-    : PollItem(ZMQ_POLLIN, &socket, callable)
+    : PollItem(ZMQ_POLLIN, socket, callable)
 {
 }
 
@@ -165,7 +173,7 @@ public:
 template <typename S>
 inline
 IsSendReady<S>::IsSendReady(S& socket, Callback callable)
-    : PollItem(ZMQ_POLLOUT, &socket, callable)
+    : PollItem(ZMQ_POLLOUT, socket, callable)
 {
 }
 
@@ -198,7 +206,7 @@ public:
 template <typename S>
 inline
 IsSendOrReceiveReady<S>::IsSendOrReceiveReady(S& socket, Callback callable)
-    : PollItem(ZMQ_POLLIN | ZMQ_POLLOUT, &socket, callable)
+    : PollItem(ZMQ_POLLIN | ZMQ_POLLOUT, socket, callable)
 {
 }
 
