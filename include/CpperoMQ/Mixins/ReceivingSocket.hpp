@@ -52,7 +52,7 @@ public:
     auto setMaxInboundMessageSize(const int size) -> void;
     auto setReceiveBufferSize(const int size)     -> void;
     auto setReceiveHighWaterMark(const int hwm)   -> void;
-    auto setReceiveTimeout(const int size)        -> void;
+    auto setReceiveTimeout(const int timeout)     -> void;
 
 protected:
     ReceivingSocket(void* context, int type);
@@ -155,9 +155,9 @@ auto ReceivingSocket<S>::setReceiveHighWaterMark(const int hwm) -> void
 
 template <typename S>
 inline
-auto ReceivingSocket<S>::setReceiveTimeout(const int size) -> void
+auto ReceivingSocket<S>::setReceiveTimeout(const int timeout) -> void
 {
-    setSocketOption(ZMQ_RCVTIMEO, hwm);
+    setSocketOption(ZMQ_RCVTIMEO, timeout);
 }
 
 template <typename S>
