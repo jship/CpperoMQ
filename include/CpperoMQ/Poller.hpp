@@ -24,7 +24,6 @@
 
 #include <CpperoMQ/PollItem.hpp>
 
-#include <algorithm>
 #include <array>
 
 namespace CpperoMQ
