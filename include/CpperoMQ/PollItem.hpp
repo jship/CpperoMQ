@@ -56,10 +56,10 @@ public:
     auto getCallback() -> Callback;
 
 protected:
-    PollItem(int events, Socket& socket, Callback callable);
+    PollItem(int events, Socket& socket, Callback callable = Callback());
 
 private:
-    PollItem(int events, Socket* socket, Callback callable);
+    PollItem(int events, Socket* socket, Callback callable = Callback());
 
     int mEvents;
     Socket* mSocketPtr;
@@ -127,7 +127,7 @@ class IsReceiveReady : public PollItem
                  , "Template parameter 'S' must inherit ReceivingSocket mixin." );
 
 public:
-    IsReceiveReady(S& socket, Callback callable);
+    IsReceiveReady(S& socket, Callback callable = Callback());
     virtual ~IsReceiveReady() = default;
     IsReceiveReady(const IsReceiveReady& other) = delete;
     IsReceiveReady(IsReceiveReady&& other);
@@ -162,7 +162,7 @@ class IsSendReady : public PollItem
                  , "Template parameter 'S' must inherit SendingSocket mixin." );
 
 public:
-    IsSendReady(S& socket, Callback callable);
+    IsSendReady(S& socket, Callback callable = Callback());
     virtual ~IsSendReady() = default;
     IsSendReady(const IsSendReady& other) = delete;
     IsSendReady(IsSendReady&& other);
@@ -195,7 +195,7 @@ class IsSendOrReceiveReady : public PollItem
                  , "Template parameter 'S' must inherit ReceivingSocket and SendingSocket mixins." );
 
 public:
-    IsSendOrReceiveReady(S& socket, Callback callable);
+    IsSendOrReceiveReady(S& socket, Callback callable = Callback());
     virtual ~IsSendOrReceiveReady() = default;
     IsSendOrReceiveReady(const IsSendOrReceiveReady& other) = delete;
     IsSendOrReceiveReady(IsSendOrReceiveReady&& other);
@@ -219,7 +219,7 @@ IsSendOrReceiveReady<S>::IsSendOrReceiveReady(IsSendOrReceiveReady&& other)
 
 template <typename S>
 inline
-auto isReceiveReady(S& socket, PollItem::Callback callable) -> IsReceiveReady<S>
+auto isReceiveReady(S& socket, PollItem::Callback callable = PollItem::Callback()) -> IsReceiveReady<S>
 {
     IsReceiveReady<S> receiveReady(socket, callable);
     return (receiveReady);
@@ -227,7 +227,7 @@ auto isReceiveReady(S& socket, PollItem::Callback callable) -> IsReceiveReady<S>
 
 template <typename S>
 inline
-auto isSendReady(S& socket, PollItem::Callback callable) -> IsSendReady<S>
+auto isSendReady(S& socket, PollItem::Callback callable = PollItem::Callback()) -> IsSendReady<S>
 {
     IsSendReady<S> sendReady(socket, callable);
     return (sendReady);
@@ -235,7 +235,7 @@ auto isSendReady(S& socket, PollItem::Callback callable) -> IsSendReady<S>
 
 template <typename S>
 inline
-auto isSendOrReceiveReady(S& socket, PollItem::Callback callable) -> IsSendOrReceiveReady<S>
+auto isSendOrReceiveReady(S& socket, PollItem::Callback callable = PollItem::Callback()) -> IsSendOrReceiveReady<S>
 {
     IsSendOrReceiveReady<S> sendOrReceiveReady(socket, callable);
     return (sendOrReceiveReady);
