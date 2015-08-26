@@ -23,6 +23,8 @@
 #pragma once
 
 #include <CpperoMQ/DealerSocket.hpp>
+#include <CpperoMQ/ExtendedPublishSocket.hpp>
+#include <CpperoMQ/ExtendedSubscribeSocket.hpp>
 #include <CpperoMQ/PublishSocket.hpp>
 #include <CpperoMQ/PullSocket.hpp>
 #include <CpperoMQ/PushSocket.hpp>
@@ -44,14 +46,16 @@ public:
     Context & operator=(const Context & rhs) = delete;
     Context& operator=(Context&& other);
 
-    auto createDealerSocket()    -> DealerSocket;
-    auto createPublishSocket()   -> PublishSocket;
-    auto createPullSocket()      -> PullSocket;
-    auto createPushSocket()      -> PushSocket;
-    auto createReplySocket()     -> ReplySocket;
-    auto createRequestSocket()   -> RequestSocket;
-    auto createRouterSocket()    -> RouterSocket;
-    auto createSubscribeSocket() -> SubscribeSocket;
+    auto createDealerSocket()            -> DealerSocket;
+    auto createExtendedPublishSocket()   -> ExtendedPublishSocket;
+    auto createExtendedSubscribeSocket() -> ExtendedSubscribeSocket;
+    auto createPublishSocket()           -> PublishSocket;
+    auto createPullSocket()              -> PullSocket;
+    auto createPushSocket()              -> PushSocket;
+    auto createReplySocket()             -> ReplySocket;
+    auto createRequestSocket()           -> RequestSocket;
+    auto createRouterSocket()            -> RouterSocket;
+    auto createSubscribeSocket()         -> SubscribeSocket;
 
     auto getIoThreadCount() const              -> int;
     auto getMaxSocketCount() const             -> int;
@@ -113,6 +117,20 @@ inline
 auto Context::createDealerSocket() -> DealerSocket
 {
     DealerSocket socket(mContext);
+    return socket;
+}
+
+inline
+auto Context::createExtendedPublishSocket() -> ExtendedPublishSocket
+{
+    ExtendedPublishSocket socket(mContext);
+    return socket;
+}
+
+inline
+auto Context::createExtendedSubscribeSocket() -> ExtendedSubscribeSocket
+{
+    ExtendedSubscribeSocket socket(mContext);
     return socket;
 }
 

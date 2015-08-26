@@ -22,7 +22,14 @@
 
 #pragma once
 
-#include <CpperoMQ/PollItem.hpp>
+#include <CpperoMQ/DealerSocket.hpp>
+#include <CpperoMQ/ExtendedPublishSocket.hpp>
+#include <CpperoMQ/ExtendedSubscribeSocket.hpp>
+#include <CpperoMQ/PullSocket.hpp>
+#include <CpperoMQ/PushSocket.hpp>
+#include <CpperoMQ/RouterSocket.hpp>
+
+#include <type_traits>
 
 namespace CpperoMQ
 {
@@ -78,9 +85,21 @@ template <typename S1, typename S2>
 inline
 auto Proxy::run(S1& frontend, S2& backend) -> bool
 {
+    static_assert( (std::is_same<RouterSocket, S1>::value && std::is_same<DealerSocket, S2>::value) ||
+                   (std::is_same<DealerSocket, S1>::value && std::is_same<RouterSocket, S2>::value) ||
+
+                   (std::is_same<ExtendedSubscribeSocket, S1>::value && std::is_same<ExtendedPublishSocket,   S2>::value) ||
+                   (std::is_same<ExtendedPublishSocket,   S1>::value && std::is_same<ExtendedSubscribeSocket, S2>::value) ||
+    
+                   (std::is_same<PullSocket, S1>::value && std::is_same<PushSocket, S2>::value) ||
+                   (std::is_same<PushSocket, S1>::value && std::is_same<PullSocket, S2>::value)
+
+                 , "Template parameters 'S1' and 'S2' must be Router/Dealer, ExtendedSubscribe/ExtendedPublish, "
+                   "or Pull/Push." );
+
     int result = zmq_proxy_steerable(
-        static_cast<void*>(isSendReady(frontend).getRawSocket()),
-        static_cast<void*>(isReceiveReady(backend).getRawSocket()),
+        static_cast<void*>(frontend),
+        static_cast<void*>(backend),
         mCaptureSocketPtr,
         mControlSocketPtr
     );
@@ -98,7 +117,7 @@ auto Proxy::setCaptureSocket(S& socket) -> void
                  , "Template parameter 'S' must be DealerSocket, "
                    "PublishSocket, or PushSocket." );
 
-    mCaptureSocketPtr = static_cast<void*>(isSendReady(socket).getRawSocket());
+    mCaptureSocketPtr = static_cast<void*>(socket);
 }
 
 template <typename S>
@@ -110,7 +129,7 @@ auto Proxy::setControlSocket(S& socket) -> void
                  , "Template parameter 'S' must be PullSocket or "
                    "SubscribeSocket." );
 
-    mControlSocketPtr = static_cast<void*>(isReceiveReady(socket).getRawSocket());
+    mControlSocketPtr = static_cast<void*>(socket);
 }
 
 inline

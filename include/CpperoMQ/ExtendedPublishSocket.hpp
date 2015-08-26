@@ -22,35 +22,21 @@
 
 #pragma once
 
-#include <CpperoMQ/Common.hpp>
-#include <CpperoMQ/Context.hpp>
-#include <CpperoMQ/DealerSocket.hpp>
-#include <CpperoMQ/Error.hpp>
-#include <CpperoMQ/ExtendedPublishSocket.hpp>
-#include <CpperoMQ/ExtendedSubscribeSocket.hpp>
-#include <CpperoMQ/IncomingMessage.hpp>
-#include <CpperoMQ/Message.hpp>
-#include <CpperoMQ/OutgoingMessage.hpp>
-#include <CpperoMQ/Poller.hpp>
-#include <CpperoMQ/PollItem.hpp>
-#include <CpperoMQ/Proxy.hpp>
-#include <CpperoMQ/PublishSocket.hpp>
-#include <CpperoMQ/PullSocket.hpp>
-#include <CpperoMQ/PushSocket.hpp>
-#include <CpperoMQ/Receivable.hpp>
-#include <CpperoMQ/ReplySocket.hpp>
-#include <CpperoMQ/RequestSocket.hpp>
-#include <CpperoMQ/RouterSocket.hpp>
-#include <CpperoMQ/Sendable.hpp>
 #include <CpperoMQ/Socket.hpp>
-#include <CpperoMQ/SubscribeSocket.hpp>
-#include <CpperoMQ/Version.hpp>
 #include <CpperoMQ/Mixins/ConflatingSocket.hpp>
-#include <CpperoMQ/Mixins/IdentifyingSocket.hpp>
 #include <CpperoMQ/Mixins/ReceivingSocket.hpp>
-#include <CpperoMQ/Mixins/RequestingSocket.hpp>
-#include <CpperoMQ/Mixins/RouterProbingSocket.hpp>
-#include <CpperoMQ/Mixins/RoutingSocket.hpp>
 #include <CpperoMQ/Mixins/SendingSocket.hpp>
 #include <CpperoMQ/Mixins/SocketTypeWrapper.hpp>
-#include <CpperoMQ/Mixins/SubscribingSocket.hpp>
+
+namespace CpperoMQ
+{
+
+// Note that XPUB-specific socket options are currently unsupported.
+
+typedef Mixins::SocketTypeWrapper<ZMQ_XPUB,
+            Mixins::ConflatingSocket<
+                Mixins::ReceivingSocket<
+                    Mixins::SendingSocket<
+                        Socket > > > > ExtendedPublishSocket;
+
+}

@@ -118,12 +118,13 @@ template <typename S>
 class IsReceiveReady : public PollItem
 {
     // This is ugly, but mixins make it tough to use std::is_base_of.
-    static_assert( std::is_same<DealerSocket,    S>::value ||
-                   std::is_same<PullSocket,      S>::value ||
-                   std::is_same<ReplySocket,     S>::value ||
-                   std::is_same<RequestSocket,   S>::value ||
-                   std::is_same<RouterSocket,    S>::value ||
-                   std::is_same<SubscribeSocket, S>::value
+    static_assert( std::is_same<DealerSocket,            S>::value ||
+                   std::is_same<ExtendedSubscribeSocket, S>::value ||
+                   std::is_same<PullSocket,              S>::value ||
+                   std::is_same<ReplySocket,             S>::value ||
+                   std::is_same<RequestSocket,           S>::value ||
+                   std::is_same<RouterSocket,            S>::value ||
+                   std::is_same<SubscribeSocket,         S>::value
                  , "Template parameter 'S' must inherit ReceivingSocket mixin." );
 
 public:
@@ -153,12 +154,13 @@ template <typename S>
 class IsSendReady : public PollItem
 {
     // This is ugly, but mixins make it tough to use std::is_base_of.
-    static_assert( std::is_same<DealerSocket,  S>::value ||
-                   std::is_same<PublishSocket, S>::value ||
-                   std::is_same<PushSocket,    S>::value ||
-                   std::is_same<ReplySocket,   S>::value ||
-                   std::is_same<RequestSocket, S>::value ||
-                   std::is_same<RouterSocket,  S>::value
+    static_assert( std::is_same<DealerSocket,          S>::value ||
+                   std::is_same<ExtendedPublishSocket, S>::value ||
+                   std::is_same<PublishSocket,         S>::value ||
+                   std::is_same<PushSocket,            S>::value ||
+                   std::is_same<ReplySocket,           S>::value ||
+                   std::is_same<RequestSocket,         S>::value ||
+                   std::is_same<RouterSocket,          S>::value
                  , "Template parameter 'S' must inherit SendingSocket mixin." );
 
 public:
