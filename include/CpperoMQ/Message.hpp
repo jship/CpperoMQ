@@ -1,7 +1,7 @@
 // The MIT License (MIT)
 //
 // Copyright (c) 2015 Jason Shipman
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
 // deal in the Software without restriction, including without limitation the
@@ -35,7 +35,7 @@ public:
     Message(Message&& other);
     Message& operator=(const Message& other) = delete;
     Message& operator=(Message&& other);
-    
+
     friend auto swap(Message& lhs, Message& rhs) -> void;
 
 protected:
@@ -45,7 +45,7 @@ protected:
     auto getInternalMessage() const -> const zmq_msg_t* const;
     auto getInternalMessage()       ->       zmq_msg_t*;
 
-    auto shallowCopy(Message& dest) -> void;
+    auto shallowCopy(Message& dest) const -> void;
 
 private:
     zmq_msg_t mMsg;
@@ -109,9 +109,9 @@ auto Message::getInternalMessage() -> zmq_msg_t*
 }
 
 inline
-auto Message::shallowCopy(Message& dest) -> void
+auto Message::shallowCopy(Message& dest) const -> void
 {
-    if (0 != zmq_msg_copy(&dest.mMsg, &mMsg))
+    if (0 != zmq_msg_copy(&dest.mMsg, const_cast<zmq_msg_t*>(&mMsg)))
     {
         throw Error();
     }

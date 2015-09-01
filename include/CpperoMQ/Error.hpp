@@ -1,7 +1,7 @@
 // The MIT License (MIT)
 //
 // Copyright (c) 2015 Jason Shipman
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
 // deal in the Software without restriction, including without limitation the
@@ -33,7 +33,7 @@ class Error final : public std::exception
 public:
     Error();
 
-    virtual auto what() const -> const char* override;
+    virtual auto what() const NOEXCEPT -> const char* override;
     auto number() const -> int;
 
 private:

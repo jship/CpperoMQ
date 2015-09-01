@@ -64,14 +64,14 @@ template <typename S>
 inline
 auto RequestingSocket<S>::setRequestCorrelation(bool correlate) -> void
 {
-    setSocketOption(ZMQ_REQ_CORRELATE, (correlate) ? 1 : 0);
+    S::template setSocketOption(ZMQ_REQ_CORRELATE, (correlate) ? 1 : 0);
 }
 
 template <typename S>
 inline
 auto RequestingSocket<S>::setRelaxed(bool relax) -> void
 {
-    setSocketOption(ZMQ_REQ_RELAXED, (relax) ? 1 : 0);
+    S::template setSocketOption(ZMQ_REQ_RELAXED, (relax) ? 1 : 0);
 }
 
 template <typename S>

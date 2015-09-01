@@ -1,7 +1,7 @@
 // The MIT License (MIT)
 //
 // Copyright (c) 2015 Jason Shipman
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
 // deal in the Software without restriction, including without limitation the
@@ -108,56 +108,56 @@ template <typename S>
 inline
 auto ReceivingSocket<S>::getMaxInboundMessageSize() const -> int
 {
-    return (getSocketOption<int>(ZMQ_MAXMSGSIZE));
+    return (S::template getSocketOption<int>(ZMQ_MAXMSGSIZE));
 }
 
 template <typename S>
 inline
 auto ReceivingSocket<S>::getReceiveBufferSize() const -> int
 {
-    return (getSocketOption<int>(ZMQ_RCVBUF));
+    return (S::template getSocketOption<int>(ZMQ_RCVBUF));
 }
 
 template <typename S>
 inline
 auto ReceivingSocket<S>::getReceiveHighWaterMark() const -> int
 {
-    return (getSocketOption<int>(ZMQ_RCVHWM));
+    return (S::template getSocketOption<int>(ZMQ_RCVHWM));
 }
 
 template <typename S>
 inline
 auto ReceivingSocket<S>::getReceiveTimeout() const -> int
 {
-    return (getSocketOption<int>(ZMQ_RCVTIMEO));
+    return (S::template getSocketOption<int>(ZMQ_RCVTIMEO));
 }
 
 template <typename S>
 inline
 auto ReceivingSocket<S>::setMaxInboundMessageSize(const int size) -> void
 {
-    setSocketOption(ZMQ_MAXMSGSIZE, size);
+    S::template setSocketOption(ZMQ_MAXMSGSIZE, size);
 }
 
 template <typename S>
 inline
 auto ReceivingSocket<S>::setReceiveBufferSize(const int size) -> void
 {
-    setSocketOption(ZMQ_RCVBUF, size);
+    S::template setSocketOption(ZMQ_RCVBUF, size);
 }
 
 template <typename S>
 inline
 auto ReceivingSocket<S>::setReceiveHighWaterMark(const int hwm) -> void
 {
-    setSocketOption(ZMQ_RCVHWM, hwm);
+    S::template setSocketOption(ZMQ_RCVHWM, hwm);
 }
 
 template <typename S>
 inline
 auto ReceivingSocket<S>::setReceiveTimeout(const int timeout) -> void
 {
-    setSocketOption(ZMQ_RCVTIMEO, timeout);
+    S::template setSocketOption(ZMQ_RCVTIMEO, timeout);
 }
 
 template <typename S>

@@ -1,7 +1,7 @@
 // The MIT License (MIT)
 //
 // Copyright (c) 2015 Jason Shipman
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
 // deal in the Software without restriction, including without limitation the
@@ -62,7 +62,7 @@ SubscribingSocket<S>& SubscribingSocket<S>::operator=(SubscribingSocket<S>&& oth
     S::operator=(std::move(other));
     return (*this);
 }
-    
+
 template <typename S>
 inline
 auto SubscribingSocket<S>::subscribe(const char* buffer) -> void
@@ -76,7 +76,7 @@ inline
 auto SubscribingSocket<S>::subscribe(size_t length, const char* buffer) -> void
 {
     CPPEROMQ_ASSERT(buffer != nullptr);
-    setSocketOption(ZMQ_SUBSCRIBE, buffer, length);
+    S::setSocketOption(ZMQ_SUBSCRIBE, buffer, length);
 }
 
 template <typename S>
@@ -93,7 +93,7 @@ auto SubscribingSocket<S>::unsubscribe( size_t length
                                       , const char* buffer ) -> void
 {
     CPPEROMQ_ASSERT(buffer != nullptr);
-    setSocketOption(ZMQ_UNSUBSCRIBE, buffer, length);
+    S::setSocketOption(ZMQ_UNSUBSCRIBE, buffer, length);
 }
 
 template <typename S>

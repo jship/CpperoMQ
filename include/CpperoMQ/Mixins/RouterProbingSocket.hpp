@@ -64,7 +64,7 @@ template <typename S>
 inline
 auto RouterProbingSocket<S>::setRouterProbing(bool routerProbing) -> void
 {
-    setSocketOption(ZMQ_PROBE_ROUTER, (routerProbing) ? 1 : 0);
+    S::template setSocketOption(ZMQ_PROBE_ROUTER, (routerProbing) ? 1 : 0);
 }
 
 template <typename S>

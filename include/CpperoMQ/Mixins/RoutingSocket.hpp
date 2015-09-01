@@ -65,21 +65,21 @@ template <typename S>
 inline
 auto RoutingSocket<S>::setHandover(bool handover) -> void
 {
-    setSocketOption(ZMQ_ROUTER_HANDOVER, (handover) ? 1 : 0);
+    S::template setSocketOption(ZMQ_ROUTER_HANDOVER, (handover) ? 1 : 0);
 }
 
 template <typename S>
 inline
 auto RoutingSocket<S>::setMandatoryRouting(bool mandatory) -> void
 {
-    setSocketOption(ZMQ_ROUTER_MANDATORY, (mandatory) ? 1 : 0);
+    S::template setSocketOption(ZMQ_ROUTER_MANDATORY, (mandatory) ? 1 : 0);
 }
 
 template <typename S>
 inline
 auto RoutingSocket<S>::setRawMode(bool rawMode) -> void
 {
-    setSocketOption(ZMQ_ROUTER_RAW, (rawMode) ? 1 : 0);
+    S::template setSocketOption(ZMQ_ROUTER_RAW, (rawMode) ? 1 : 0);
 }
 
 template <typename S>

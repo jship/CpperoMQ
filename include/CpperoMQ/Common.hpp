@@ -1,7 +1,7 @@
 // The MIT License (MIT)
 //
 // Copyright (c) 2015 Jason Shipman
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
 // deal in the Software without restriction, including without limitation the
@@ -26,6 +26,12 @@
 #define CPPEROMQ_ASSERT(expression) assert(expression)
 #else
 #define CPPEROMQ_ASSERT(expression) (void)(expression)
+#endif
+
+#ifndef _MSC_VER
+#define NOEXCEPT noexcept
+#else
+#define NOEXCEPT
 #endif
 
 #include <CpperoMQ/Error.hpp>

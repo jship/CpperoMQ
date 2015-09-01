@@ -1,7 +1,7 @@
 // The MIT License (MIT)
 //
 // Copyright (c) 2015 Jason Shipman
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
 // deal in the Software without restriction, including without limitation the
@@ -61,7 +61,7 @@ IdentifyingSocket<S>& IdentifyingSocket<S>::operator=(IdentifyingSocket<S>&& oth
     S::operator=(std::move(other));
     return (*this);
 }
-    
+
 template <typename S>
 inline
 auto IdentifyingSocket<S>::setIdentity(const char* buffer) -> void
@@ -75,7 +75,7 @@ inline
 auto IdentifyingSocket<S>::setIdentity(size_t length, const char* buffer) -> void
 {
     CPPEROMQ_ASSERT(buffer != nullptr);
-    setSocketOption(ZMQ_IDENTITY, buffer, length);
+    S::setSocketOption(ZMQ_IDENTITY, buffer, length);
 }
 
 template <typename S>
@@ -84,7 +84,7 @@ auto IdentifyingSocket<S>::getIdentity( size_t length
                                       , const char* buffer ) -> void
 {
     CPPEROMQ_ASSERT(buffer != nullptr);
-    return (getSocketOption(ZMQ_IDENTITY, buffer, length));
+    return (S::getSocketOption(ZMQ_IDENTITY, buffer, length));
 }
 
 template <typename S>

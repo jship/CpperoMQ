@@ -1,7 +1,7 @@
 // The MIT License (MIT)
 //
 // Copyright (c) 2015 Jason Shipman
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
 // deal in the Software without restriction, including without limitation the
@@ -42,7 +42,7 @@ public:
     OutgoingMessage& operator=(const OutgoingMessage& other) = delete;
     OutgoingMessage& operator=(OutgoingMessage&& other);
 
-    virtual auto send(Socket& socket, const bool moreToSend) -> bool override;
+    virtual auto send(const Socket& socket, const bool moreToSend) const -> bool override;
 };
 
 inline
@@ -83,9 +83,9 @@ OutgoingMessage& OutgoingMessage::operator=(OutgoingMessage&& other)
 }
 
 inline
-auto OutgoingMessage::send(Socket& socket, const bool moreToSend) -> bool
+auto OutgoingMessage::send(const Socket& socket, const bool moreToSend) const -> bool
 {
-    zmq_msg_t* msgPtr = getInternalMessage();
+    zmq_msg_t* msgPtr = const_cast<zmq_msg_t*>(getInternalMessage());
 
     CPPEROMQ_ASSERT(nullptr != msgPtr);
     CPPEROMQ_ASSERT(nullptr != socket.mSocket);
