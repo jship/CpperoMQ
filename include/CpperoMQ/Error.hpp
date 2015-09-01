@@ -47,7 +47,7 @@ Error::Error()
 }
 
 inline
-auto Error::what() const -> const char*
+auto Error::what() const NOEXCEPT -> const char*
 {
     return zmq_strerror(mErrorNumber);
 }
