@@ -124,7 +124,7 @@ sub.receive(msgHeader, oldDept, newDept, employee);
 
 The above is sent as a single, multipart message that is guaranteed by 0MQ to be either received in full or not received at all by a connected receiving socket.  Note that at any point in the list of parameters for `send` we could have incorporated some `OutgoingMessage` objects too.  Likewise, for `receive` we could have included some `IncomingMessage` objects.  The message combination/mix-and-match capabilities are what makes the multipart messaging of CpperoMQ highly composable.
 
-To see zguide examples implemented with CpperoMQ as well as some additional examples, se ethe [CpperoMQ-examples][9] repository.
+To see zguide examples implemented with CpperoMQ as well as some additional examples, see the [CpperoMQ-examples][9] repository.
 
 **Disclaimer:** None of the above code checked for errors.  Real code should check the boolean result of each relevant library function.  CpperoMQ also can throw a CpperoMQ::Error exception, so that should be caught too.
 
@@ -135,7 +135,7 @@ CpperoMQ currently does not implement the following:
 2. PAIR sockets
 3. Some uncommon socket options (workaround by passing socket handle directly to [libzmq][1])
 
-Feel free to [contribute](#Contributing) implementations for the above items.  The author may also add these as needed.
+Feel free to contribute implementations for the above items.  The author may also add these as needed.
 
 ## Alternatives
 The below 0MQ C++ bindings are alternatives to CpperoMQ:
@@ -176,7 +176,7 @@ CpperoMQ has been tested on the following operating systems and compilers:
 | OS X 10.10       | Xcode 6.4  |
 | Windows 8        | VS2013     |
 
-The above are the environments and compilers available to the author.  Please [update this table directly](#Contributing) or notify the author upon confirming additional compiler support.
+The above are the environments and compilers available to the author.  Please update this table directly or notify the author upon confirming additional compiler support.
 
 ## Installation
 CpperoMQ is a C++11 header-only library, making installation a painless two-step process:
