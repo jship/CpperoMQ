@@ -3,6 +3,7 @@ CpperoMQ is a C++11 binding for the [0MQ (libzmq)][1] C library.
 
 ## Features
 CpperoMQ offers several advantages over using the [libzmq][1] C library directly and some of the other currently available C++ 0MQ bindings:
+
 1. Highly composable multipart messaging
 2. Performance close to using libzmq directly (via a good optimizer)
 3. Type safety
@@ -129,6 +130,7 @@ To see zguide examples implemented with CpperoMQ as well as some additional exam
 
 ## Drawbacks
 CpperoMQ currently does not implement the following:
+
 1. CURVE security
 2. PAIR sockets
 3. Some uncommon socket options (workaround by passing socket handle directly to [libzmq][1])
@@ -137,17 +139,20 @@ Feel free to [contribute](#Contributing) implementations for the above items.  T
 
 ## Alternatives
 The below 0MQ C++ bindings are alternatives to CpperoMQ:
+
 1. [cppzmq][6]
 2. [zmqpp][7]
 3. [azmq][8]
 
 ## Requirements
 CpperoMQ requires the following:
+
 1. A compiler with [C++11 support][2]
 2. libzmq's [zmq.hpp header][3] is available on the include path
 3. Binaries compiled with CpperoMQ must be linked with [libzmq][1].
 
 The specific C++11 features used are listed below.  Note that the source code is more likely to change than this README, so the list may be outdated.
+
 ```
 auto
 Defaulted functions
@@ -175,6 +180,7 @@ The above are the environments and compilers available to the author.  Please [u
 
 ## Installation
 CpperoMQ is a C++11 header-only library, making installation a painless two-step process:
+
 1. Download CpperoMQ.
 2. From the project root's 'include' directory, copy the CpperoMQ directory into a project's (or the system) include path.
 
