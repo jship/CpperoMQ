@@ -225,9 +225,9 @@ private:
 
 Now we can send `DepartmentUpdate` objects directly on `Sockets`.
 
-To see zguide examples implemented with CpperoMQ as well as some additional examples, see the [CpperoMQ-examples][9] repository.
+**To see zguide examples implemented with CpperoMQ as well as some additional examples, see the [CpperoMQ-examples][9] repository.**
 
-**Disclaimer:** None of the above code checked for errors.  Real code should check the boolean result of each relevant library function.  CpperoMQ can throw a CpperoMQ::Error exception, so that should be caught too.
+**Disclaimer:** Most of the above code did not check for errors.  Real code should check the boolean result of each relevant library function.  CpperoMQ can throw a CpperoMQ::Error exception, so that should be caught too.
 
 ## Drawbacks
 CpperoMQ currently does not implement the following:
