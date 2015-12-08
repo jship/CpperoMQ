@@ -249,7 +249,7 @@ The below 0MQ C++ bindings are alternatives to CpperoMQ:
 CpperoMQ requires the following:
 
 1. A compiler with [C++11 support][2]
-2. [libzmq][1] 4 or greater.
+2. [libzmq][1] 4.1 or greater.
 3. libzmq's [zmq.hpp header][3] is available on the include path
 4. Binaries compiled with CpperoMQ must be linked with [libzmq][1].
 

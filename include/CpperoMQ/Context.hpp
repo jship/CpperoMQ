@@ -62,10 +62,16 @@ public:
     auto getMaxConfigurableSocketCount() const -> int;
 
     auto isIPv6Enabled() const -> bool;
-    auto isBlocky() const      -> bool;
+
+#if ZMQ_VERSION >= ZMQ_MAKE_VERSION(4, 2, 0)
+    auto isBlocky() const -> bool;
+#endif
 
     auto setIPv6Enabled(bool enabled) -> void;
-    auto setBlocky(bool blocky)       -> void;
+
+#if ZMQ_VERSION >= ZMQ_MAKE_VERSION(4, 2, 0)
+    auto setBlocky(bool blocky) -> void;
+#endif
 
 private:
     auto getContextSetting(const int settingName) const -> int;
@@ -207,11 +213,13 @@ auto Context::isIPv6Enabled() const -> bool
     return (1 == getContextSetting(ZMQ_IPV6));
 }
 
+#if ZMQ_VERSION >= ZMQ_MAKE_VERSION(4, 2, 0)
 inline
 auto Context::isBlocky() const -> bool
 {
     return (1 == getContextSetting(ZMQ_BLOCKY));
 }
+#endif
 
 inline
 auto Context::setIPv6Enabled(bool enabled) -> void
@@ -219,11 +227,13 @@ auto Context::setIPv6Enabled(bool enabled) -> void
     setContextSetting(ZMQ_IPV6, enabled ? 1 : 0);
 }
 
+#if ZMQ_VERSION >= ZMQ_MAKE_VERSION(4, 2, 0)
 inline
 auto Context::setBlocky(bool blocky) -> void
 {
     setContextSetting(ZMQ_BLOCKY, blocky ? 1 : 0);
 }
+#endif
 
 inline
 auto Context::getContextSetting(const int settingName) const -> int
