@@ -54,16 +54,19 @@ private:
     long mTimeout;
 };
 
+inline
 Poller::Poller(const long timeout)
     : mTimeout(timeout)
 {
 }
 
+inline
 auto Poller::getTimeout() const -> long
 {
     return mTimeout;
 }
 
+inline
 auto Poller::setTimeout(const long timeout) -> void
 {
     mTimeout = timeout;
@@ -80,6 +83,7 @@ auto Poller::poll(PollItem& pollItem, PollItemTypes&... pollItems) -> void
 }
 
 template <size_t N, typename... PollItemTypes>
+inline
 auto Poller::poll( std::array<zmq_pollitem_t, N>& pollItemArray
                  , std::array<PollItem::Callback, N>& callbackArray
                  , PollItem& pollItem
@@ -100,6 +104,7 @@ auto Poller::poll( std::array<zmq_pollitem_t, N>& pollItemArray
 }
 
 template <size_t N>
+inline
 auto Poller::poll( std::array<zmq_pollitem_t, N>& pollItemArray
                  , std::array<PollItem::Callback, N>& callbackArray ) -> void
 {
