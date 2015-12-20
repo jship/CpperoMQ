@@ -21,6 +21,7 @@
 // IN THE SOFTWARE.
 
 #pragma once
+#include <cstring>
 
 namespace CpperoMQ
 {
