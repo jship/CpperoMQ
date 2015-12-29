@@ -25,6 +25,7 @@
 #include <CpperoMQ/Common.hpp>
 
 #include <algorithm>
+#include <cstring>
 
 namespace CpperoMQ
 {
