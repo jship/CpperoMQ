@@ -9,6 +9,9 @@ CpperoMQ offers several advantages over using the [libzmq][1] C library directly
 3. Performance close to using libzmq directly (via a good optimizer)
 
 ## Using the Library
+
+To see zguide examples implemented with CpperoMQ as well as some additional examples, see the [CpperoMQ-examples][9] repository.
+
 Just like 0MQ, the building blocks in CpperoMQ are contexts, sockets, and messages.
 
 All CpperoMQ classes exist under the ```CpperoMQ``` namespace, so the following saves a few keystrokes for the remainder of this section:
