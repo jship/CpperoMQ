@@ -1,7 +1,7 @@
 // The MIT License (MIT)
 //
 // Copyright (c) 2015 Jason Shipman
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
 // deal in the Software without restriction, including without limitation the
@@ -46,13 +46,14 @@ public:
 
     auto connect(const char* address) -> void;
     auto disconnect(const char* address) -> void;
-    
+
     auto getBacklog() const                                 -> int;
     auto getHandshakeInterval() const                       -> int;
     auto getImmediate() const                               -> bool;
     auto getIoThreadAffinity() const                        -> uint64_t;
     auto getIPv6() const                                    -> bool;
     auto getLastEndpoint(size_t length, char* buffer) const -> void;
+    auto getLinger() const                                  -> int;
     auto getMaxReconnectInterval() const                    -> int;
     auto getMulticastRate() const                           -> int;
     auto getMulticastRecoveryInterval() const               -> int;
@@ -63,13 +64,14 @@ public:
     auto setImmediate(const bool immediate)                   -> void;
     auto setIoThreadAffinity(const uint64_t affinity)         -> void;
     auto setIPv6(const bool ipv6)                             -> void;
+    auto setLinger(const int seconds)                         -> void;
     auto setMaxReconnectInterval(const int milliseconds)      -> void;
     auto setMulticastRate(const int kbps)                     -> void;
     auto setMulticastRecoveryInterval(const int milliseconds) -> void;
     auto setReconnectInterval(const int milliseconds)         -> void;
 
     explicit operator void*();
-    
+
 protected:
     Socket(void* context, int type);
     Socket(Socket&& other);
@@ -205,6 +207,12 @@ auto Socket::getLastEndpoint(size_t length, char* buffer) const -> void
 }
 
 inline
+auto Socket::getLinger() const -> int
+{
+    return (getSocketOption<int>(ZMQ_LINGER));
+}
+
+inline
 auto Socket::getMaxReconnectInterval() const -> int
 {
     return (getSocketOption<int>(ZMQ_RECONNECT_IVL_MAX));
@@ -234,7 +242,7 @@ auto Socket::setBacklog(const int backlog) -> void
     setSocketOption(ZMQ_BACKLOG, backlog);
 }
 
-inline 
+inline
 auto Socket::setHandshakeInterval(const int milliseconds) -> void
 {
     setSocketOption(ZMQ_HANDSHAKE_IVL, milliseconds);
@@ -256,6 +264,12 @@ inline
 auto Socket::setIPv6(const bool ipv6) -> void
 {
     setSocketOption(ZMQ_IPV6, (ipv6) ? 1 : 0);
+}
+
+inline
+auto Socket::setLinger(const int seconds) -> void
+{
+    setSocketOption(ZMQ_LINGER, seconds);
 }
 
 inline
